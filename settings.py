@@ -11,4 +11,5 @@ from pathlib import Path  # python3 only
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
-DISCORD_TOKEN=os.getenv("DISCORD_TOKEN")
+#DISCORD_TOKEN=os.getenv("FT_DISCORD_TOKEN")
+DISCORD_TOKEN=os.getenv("MY_DISCORD_TOKEN")
