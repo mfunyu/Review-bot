@@ -11,8 +11,7 @@ import settings
 # envファイルに設定したbotのトークンを取得
 TOKEN = settings.DISCORD_TOKEN
 # guild名
-#GUILD = '42Tokyo_42cursus'
-GUILD = 'U_challenge'
+GUILD = '42Tokyo_42cursus'
 # ボイスチャンネルのカテゴリー名
 VOICE_CATEGORY = 'Project Review'
 # レビュー待機コーナー名
@@ -33,7 +32,6 @@ def match_name(name, target):
 
 # レビューの開始時間を読み込む （エラー処理まだ)
 def get_time(s_time):
-    flag = False
     if ':' in s_time:
         s_time = s_time.split(':')[0] + s_time.split(':')[1]
     if len(s_time) == 3:
@@ -58,63 +56,46 @@ def get_time(s_time):
         diff = diff_timedelta.total_seconds()
     return f'{hour}:{min}', diff
 
-def notify_on_time(time, new_channel, member, prj, DM, invite):
-    if new_channel == '':
+def notify_on_time(time, new_channel, member, prj, DM, guild):
+    category = discord.utils.get(guild.categories, name=VOICE_CATEGORY)
+    if new_channel == 'reviewee':
         title = '【レビュー通知】'
         dm = f'{member.name}さん こんにちは。 レビューの時間です :)'
-        embed = discord.Embed(title=title, description=dm, color=0x7FC4B8)
+        embed = discord.Embed(title=title, description=dm, color=0xd2b48c)
         embed.add_field(name='Project名', value=f'{prj}')
         embed.add_field(name='開始', value=f'{time}')
-        embed.add_field(name='待機場所', value=invite)
+        embed.add_field(name='待機場所', value=f'macOS: ``CMD+K !{WAITING_CHANNEL}``\nWindows: ``Ctrl+K !{WAITING_CHANNEL}``')
         asyncio.ensure_future(DM.send(embed=embed), loop=loop)
+    elif new_channel.name not in str([c for c in category.channels]):
+        return
     elif member.voice and member.voice.channel.name == WAITING_CHANNEL:
         # A: レビュー待機にいる場合
         asyncio.ensure_future(member.edit(mute=False, voice_channel=new_channel), loop=loop)
         return
     # B: レビュー待機にいない場合
     else:
-        # invite = asyncio.ensure_future(new_channel.create_invite(), loop=loop)
-        # if not member.dm_channel:
-        #     asyncio.ensure_future(member.create_dm(), loop=loop)
-        # print(member.dm_channel)
         title = '【レビュー通知】'
-        dm = f'{member.name}さん こんにちは。\n時間になりましたので、以下のリンクからレビューに参加してください :)'
-        embed = discord.Embed(title=title, description=dm, color=0x7FC4B8)
+        dm = f'{member.name}さん こんにちは。\n時間になりましたので、以下のチャンネルからレビューに参加してください :)'
+        embed = discord.Embed(title=title, description=dm, color=0xd2b48c)
         embed.add_field(name='Project名', value=f'{prj}')
         embed.add_field(name='開始', value=f'{time}')
-        embed.add_field(name='チャンネル', value=invite)
+        embed.add_field(name='チャンネル', value=f'macOS: ``CMD+K !{new_channel.name}``\nWindows: ``Ctrl+K !{new_channel.name}``')
         asyncio.ensure_future(DM.send(embed=embed), loop=loop)
-        # await member.dm_channel.send(invite)
 
 
-def set_scheule(diff, t, new_channel, user, prj, dm, invite):
+def set_scheule(diff, t, new_channel, user, prj, dm, guild):
     print("@set_schedule")
     scheduler = sched.scheduler(time.time, time.sleep)
-    scheduler.enter(diff, 1, notify_on_time, (t, new_channel, user, prj, dm, invite, ))
+    scheduler.enter(diff, 1, notify_on_time, (t, new_channel, user, prj, dm, guild, ))
     scheduler.run()
-
-    # print("@add_thread")
-    # thread = threading.Thread(target=notify_on_time.start, args=(time, new_channel, user, prj,))
-    # thread.start()
 
 # 起動時に動作する処理
 @client.event
 async def on_ready():
-    # 起動したらターミナルにログイン通知が表示される
-    print('ログインしました')
-
     # guildを指定
     for guild in client.guilds:
         if guild.name == GUILD:
             break
-
-    # guildにいるメンバーを出力
-    print(
-        f'{client.user} is connected to the following guild:\n'
-        f'{guild.name}(id: {guild.id})\n')
-
-    members = '\n - '.join([member.name for member in guild.members])
-    print(f'Guild Members:\n - {members}')
 
 # メッセージ受信時に動作する処理
 @client.event
@@ -134,10 +115,10 @@ async def on_message(message):
     # ヘルプ：botの使い方を表示する
     if message.content.startswith("/help"):
         embed = discord.Embed(title='【Reveiw botの使い方】', color=0xFFD865)
-        embed.add_field(name='For ReviewER', value='``/[project] [time]``\nex) /C00 2342\n1.レビューボイスチャンネルを作成\n2a.レビュー待機にいる場合、時間になったらチャンネルに自動移遷\n2b.それ以外の場合、時間になったら招待リンクをDMで通知',inline=False)
+        embed.add_field(name='For ReviewER', value='``/[project] [time]``\nex) /C00 2342\n1.レビューボイスチャンネルを作成\n2a.レビュー待機にいる場合、時間になったらチャンネルに自動移遷\n2b.それ以外の場合、時間になったらDMで通知',inline=False)
         embed.add_field(name='For ReviewEE', value='``//[project] [time]``\nex) //C00 2342\n時間になったらDMで通知',inline=False)
         embed.add_field(name='Text', value='``/text ([project] [time])``\nex) /text\n自分のいるボイスチャンネルの名前のテキストチャンネルを作成\nex) /text C00\n時間やプロジェクト名を指定し自分のテキストチャンネルを作成',inline=False)
-        embed.add_field(name='Invite (call)', value='``/call [user]``\nex) /call nop\n1a.相手がレビュー待機にいる場合、自分のいるレビューチャンネルに呼ぶ\n1b.それ以外の場合、招待リンクをDMで送る\n2.onlineでない場合その旨通知',inline=False)
+        embed.add_field(name='Invite (call)', value='``/call [user]``\nex) /call nop\n1a.相手がレビュー待機にいる場合、自分のいるレビューチャンネルに呼ぶ\n1b.それ以外の場合DMで通知\n2.onlineでない場合その旨通知',inline=False)
         embed.add_field(name='Terminate', value='``/done``\n自分のいるレビューボイスチャンネルとレビューテキストチャンネルを消去\n',inline=False)
         embed.add_field(name='Clear', value='``/clear``\nProject_Review内の自分の名前を含むチャンネルを全て消去\n',inline=False)
         await message.channel.send(embed=embed)
@@ -164,10 +145,9 @@ async def on_message(message):
                 if not member.dm_channel:
                     await member.create_dm()
                 dm = f'{member.name}さん、こんにちは。\n{message.author.name}さんとのレビューの時間です :)'
-                embed = discord.Embed(title='【レビュー呼び出し】', description=dm, color=0x00AFB9)
+                embed = discord.Embed(title='【レビュー呼び出し】', description=dm, color=0xffa500)
                 if vc and vc.channel.category == category and vc.channel != WAITING_CHANNEL:
-                    invite = await vc.channel.create_invite(max_age=600, max_uses=1)
-                    embed.add_field(name='channel', value=invite)
+                    embed.add_field(name='channel', value=f'macOS: ``CMD+K !{vc.channel.name}``\nWindows: ``Ctrl+K !{vc.channel.name}``')
                 await member.dm_channel.send(embed=embed)
                 if str(member.status) != 'online':
                     reply = f'{member.name}さんはオンラインではない可能性があります。'
@@ -179,8 +159,6 @@ async def on_message(message):
             else:
                 await message.add_reaction('✅')
 
-
-    # elif message.content.startswith("/add"):
 
     # レビュー終了：レビューチャンネルを消去 ＋ メッセージを送る
     elif message.content == "/done":
@@ -240,19 +218,6 @@ async def on_message(message):
             reply = f'{channel_name} を削除しました'
         await message.channel.send(reply)
 
-    # elif message.content == "/rm":
-    #     reply = ''
-    #     for channel in [c for c in category.channels if not c.members if c.name != WAITING_CHANNEL]:
-    #         reply += f'{channel.name} '
-    #         await channel.delete()
-    #     if not reply:
-    #         await message.add_reaction('❓')
-    #         reply = '空のチャンネルはありませんでした'
-    #     else:
-    #         await message.add_reaction('✅')
-    #         reply += 'を削除しました'
-    #     await message.channel.send(reply)
-
     elif message.content.startswith("/text"):
         name = ''
         vc = message.author.voice
@@ -281,21 +246,17 @@ async def on_message(message):
         if not message.author.dm_channel:
             await message.author.create_dm()
         channel = discord.utils.get(guild.channels, name=WAITING_CHANNEL)
-        invite = await channel.create_invite(max_age=600, max_uses=1)
-        new_channel = ''
-        thread = threading.Thread(target=set_scheule, args=(diff, time, new_channel, message.author, prj, message.author.dm_channel, invite))
+        new_channel = 'reviewee'
+        thread = threading.Thread(target=set_scheule, args=(diff, time, new_channel, message.author, prj, message.author.dm_channel, guild))
         thread.start()
         await message.add_reaction('✅')
 
-    # チャンネル名を指定してボイスチャンネルを作成してそのチャンネルに移動させる
-    elif message.content.startswith("/voice"):
-        user = message.author.name
-        channel = msg[1]
-        await Guild.change_voice_state(voice_channel=channel)
-        reply = f'参加しました'
-        await message.channel.send(reply)
-
     elif message.content.startswith("/cancel"):
+        if len(msg) != 3:
+            reply = f'チャンネル名を指定してください ex) /cancel ex00 2342'
+            await message.add_reaction('\N{Heavy Exclamation Mark Symbol}')
+            await message.channel.send(reply)
+            return
         prj = msg[1]
         user = message.author.name
         time = get_time(msg[2])[0]
@@ -303,11 +264,12 @@ async def on_message(message):
         if name in str([c for c in category.channels]):
             channel = discord.utils.get(guild.channels, name=name)
             await channel.delete()
-        await message.add_reaction('✅')
+            await message.add_reaction('✅')
+        else:
+            await message.add_reaction('❓')
+            reply = '該当するチャンネルが見当たりません。チャンネル名を確認してください。'
+            await message.channel.send(reply)
         # スレッドをキャンセルしたいけどできない…
-        # print(threading.enumerate())
-        # print(threading.active_count())
-        # print(threading.Thread.name)
 
     # レビュワーがレビュー用チャンネルを立てる
     elif message.content.startswith("/"):
@@ -326,10 +288,9 @@ async def on_message(message):
             new_channel = await category.create_voice_channel(name=name)
             if not message.author.dm_channel:
                 await message.author.create_dm()
-            invite = await new_channel.create_invite(max_age=600, max_uses=1)
-            thread = threading.Thread(target=set_scheule, name=name, args=(diff, time, new_channel, message.author, prj, message.author.dm_channel, invite))
+            thread = threading.Thread(target=set_scheule, name=name, args=(diff, time, new_channel, message.author, prj, message.author.dm_channel, guild))
             thread.start()
-            # await message.add_reaction('✅')
+            await message.add_reaction('✅')
             # notify_on_time.start(time, new_channel, message.author, prj)
 
 # memberのボイスステータスがかわると起動
@@ -340,22 +301,6 @@ async def on_voice_state_update(member, before, after):
         if guild.name == GUILD:
             break
 
-    # 特定のカテゴリーのチャンネルから離脱したときに
-    # そこが空かつWAITING_CHANNELでないなら削除する
-        # if before.channel:
-        #     if before.channel.name != WAITING_CHANNEL:
-        #         if not before.channel.members:
-        #             if before.channel.category == category:
-        #                 await before.channel.delete()
-
-    # ボイスチャンネルから移動したらサーバーミュートを解除する
-        # if before.mute:
-        #     if before.channel:
-        #         if before.channel.name == WAITING_CHANNEL:
-        #             if after.channel != before.channel:
-        #                 await member.edit(mute=False)
-        # これではサーバー離脱したときにエラーがおこる
-
     # レビュー待機ではmute, それ以外ではmuteOffにする
     if member.voice:
         if after.mute:
@@ -365,36 +310,5 @@ async def on_voice_state_update(member, before, after):
             if after.channel.name == WAITING_CHANNEL:
                 await member.edit(mute=True)
 
-
-# レビュー時間に
-# A: レビュワーがレビュー待機にいる場合はレビューボイスチャンネルに移動させる
-# B: レビュワーがレビュー待機にいない場合は招待用dmを送る
-# @tasks.loop(seconds=10)
-    # async def notify_on_time(time, new_channel, member, prj):
-    #     now = datetime.datetime.now().strftime('%H:%M')
-    #     if now == time:
-    #         flag = False
-    #         if member.voice:
-    #             # A: レビュー待機にいる場合
-    #             if member.voice.channel.name == WAITING_CHANNEL:
-    #                 await member.edit(mute=False, voice_channel=new_channel)
-    #                 flag = True
-    #         # B: レビュー待機にいない場合
-    #         if flag == False:
-    #             invite = await new_channel.create_invite()
-    #             if not member.dm_channel:
-    #                 await member.create_dm()
-    #             title = '【レビュー通知】'
-    #             dm = f'{member.name}さん こんにちは。 以下のリンクからレビューに参加してください :)'
-    #             embed = discord.Embed(title=title, description=dm, color=0x7FC4B8)
-    #             embed.add_field(name='Project名', value=f'{prj}')
-    #             embed.add_field(name='開始', value=f'{time}')
-    #             embed.add_field(name='チャンネル', value=invite)
-    #             await member.dm_channel.send(embed=embed)
-    #             # await member.dm_channel.send(invite)
-    #         notify_on_time.stop()
-
-
 # Botの起動とDiscordサーバーへの接続
-
 client.run(TOKEN)
