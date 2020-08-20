@@ -37,7 +37,6 @@ def get_time(s_time):
     if len(s_time) == 3:
         hour = '0' + s_time[0]
         min = s_time[1:]
-        review = datetime.datetime.strptime(s_time)
     elif len(s_time) == 4:
         hour = s_time[:2]
         min = s_time[2:]
@@ -190,33 +189,33 @@ async def on_message(message):
         await message.channel.send(reply)
 
     # 全削除：カテゴリー内の空のチャンネルを全削除する（レビュー待機以外）
-    elif message.content == "/remove-all":
-        reply = ''
-        for channel in [c for c in category.channels if not c.members if c.name != WAITING_CHANNEL]:
-            reply += f'\"{channel.name}\" '
-            await channel.delete()
-        if not reply:
-            await message.add_reaction('❓')
-            reply = '空のチャンネルはありませんでした'
-        else:
-            await message.add_reaction('✅')
-            reply += 'を削除しました'
-        await message.channel.send(reply)
+    # elif message.content == "/remove-all":
+    #     reply = ''
+    #     for channel in [c for c in category.channels if not c.members if c.name != WAITING_CHANNEL]:
+    #         reply += f'\"{channel.name}\" '
+    #         await channel.delete()
+    #     if not reply:
+    #         await message.add_reaction('❓')
+    #         reply = '空のチャンネルはありませんでした'
+    #     else:
+    #         await message.add_reaction('✅')
+    #         reply += 'を削除しました'
+    #     await message.channel.send(reply)
 
     # 削除：カテゴリー内の指定のチャンネルを削除する
-    elif message.content.startswith("/remove"):
-        if len(msg) != 2:
-            return
-        channel_name = msg[1]
-        channel = discord.utils.get(guild.channels, name=channel_name)
-        if not channel:
-            await message.add_reaction('❓')
-            reply = '該当するチャンネルが見当たりません。チャンネル名を確認してください。'
-        else:
-            await channel.delete()
-            await message.add_reaction('✅')
-            reply = f'{channel_name} を削除しました'
-        await message.channel.send(reply)
+    # elif message.content.startswith("/remove"):
+    #     if len(msg) != 2:
+    #         return
+    #     channel_name = msg[1]
+    #     channel = discord.utils.get(guild.channels, name=channel_name)
+    #     if not channel:
+    #         await message.add_reaction('❓')
+    #         reply = '該当するチャンネルが見当たりません。チャンネル名を確認してください。'
+    #     else:
+    #         await channel.delete()
+    #         await message.add_reaction('✅')
+    #         reply = f'{channel_name} を削除しました'
+    #     await message.channel.send(reply)
 
     elif message.content.startswith("/text"):
         name = ''
@@ -239,6 +238,8 @@ async def on_message(message):
 
     # レビュイーがdmを設定する
     elif message.content.startswith("//"):
+        if len(msg) != 2:
+            return
         prj = msg[0][2:]
         user = message.author.name
         time = get_time(msg[1])[0]
