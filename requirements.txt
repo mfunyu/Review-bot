@@ -7,6 +7,6 @@ discord.py==1.4.1
 idna==2.9
 multidict==4.7.6
 python-dotenv==0.13.0
+pytz==2020.1
 websockets==8.1
 yarl==1.4.2
-psycopg2==2.7.6.1

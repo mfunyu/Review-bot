@@ -7,6 +7,7 @@ import sched
 import time
 import re
 import settings
+import pytz
 
 # envファイルに設定したbotのトークンを取得
 TOKEN = settings.DISCORD_TOKEN
@@ -41,17 +42,17 @@ def get_time(s_time):
         hour = s_time[:2]
         min = s_time[2:]
     hour = str(int(hour) % 24)
-    if datetime.datetime.now().strftime('%H:%M') == f'{hour}:{min}':
+    if datetime.datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%H:%M') == f'{hour}:{min}':
         diff = 0
     else:
-        ynow = datetime.datetime.now().strftime('%Y')
-        mnow = datetime.datetime.now().strftime('%m')
-        if datetime.datetime.now().strftime('%H:%M') < f'{hour}:{min}':
-            dnow = datetime.datetime.now().strftime('%d')
+        ynow = datetime.datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%Y')
+        mnow = datetime.datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%m')
+        if datetime.datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%H:%M') < f'{hour}:{min}':
+            dnow = datetime.datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%d')
         else:
-            dnow = int(datetime.datetime.now().strftime('%d')) + 1
-        review = datetime.datetime(year=int(ynow), month=int(mnow), day=int(dnow), hour=int(hour), minute=int(min))
-        diff_timedelta = review - datetime.datetime.now()
+            dnow = int(datetime.datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%d')) + 1
+        review = datetime.datetime(tzinfo=None, year=int(ynow), month=int(mnow), day=int(dnow), hour=int(hour), minute=int(min))
+        diff_timedelta = review - datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         diff = diff_timedelta.total_seconds()
     return f'{hour}:{min}', diff
 
@@ -83,7 +84,6 @@ def notify_on_time(time, new_channel, member, prj, DM, guild):
 
 
 def set_scheule(diff, t, new_channel, user, prj, dm, guild):
-    print("@set_schedule")
     scheduler = sched.scheduler(time.time, time.sleep)
     scheduler.enter(diff, 1, notify_on_time, (t, new_channel, user, prj, dm, guild, ))
     scheduler.run()
