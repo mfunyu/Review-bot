@@ -51,8 +51,10 @@ def get_time(s_time):
             dnow = datetime.datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%d')
         else:
             dnow = int(datetime.datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%d')) + 1
-        review = datetime.datetime(tzinfo=None, year=int(ynow), month=int(mnow), day=int(dnow), hour=int(hour), minute=int(min))
-        diff_timedelta = review - datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
+        review = datetime.datetime(year=int(ynow), month=int(mnow), day=int(dnow), hour=int(hour), minute=int(min))
+        review_jst = review.astimezone(pytz.timezone('Asia/Tokyo'))
+        print(review, review_jst)
+        diff_timedelta = review_jst - datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         diff = diff_timedelta.total_seconds()
     return f'{hour}:{min}', diff
 
