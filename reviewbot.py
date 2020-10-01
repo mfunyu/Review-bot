@@ -1,3 +1,8 @@
+"""
+42 Review-bot
+
+"""
+
 import discord
 from discord.ext import tasks
 import datetime
@@ -14,7 +19,7 @@ TOKEN = settings.DISCORD_TOKEN
 # guild名
 GUILD = '42Tokyo_42cursus'
 # ボイスチャンネルのカテゴリー名
-VOICE_CATEGORY = 'Project Review'
+VOICE_CATEGORY = '📝Project Review'
 # レビュー待機コーナー名
 WAITING_CHANNEL = 'レビュー待機'
 
