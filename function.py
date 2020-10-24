@@ -55,17 +55,14 @@ def get_time(s_time):
     input_time = datetime(year=int(ynow), month=int(mnow),
                           day=int(dnow), hour=int(hour), minute=int(minute))
     aware_time = TIMEZONE.localize(input_time)
-    print("| ip", input_time, "| aw ", aware_time, "| now", datetime.now(TIMEZONE))
     diff_timedelta = aware_time - datetime.now(TIMEZONE)
     diff = diff_timedelta.total_seconds()
-    print(diff)
     # late || soon
     if (-3600 <= diff <= 30):
         diff = 0
     # tomorrow
     elif (diff < 0):
         diff += 60 * 60 * 24
-    print(diff, "| rv", input_time.astimezone(), "| now", datetime.now(timezone.utc))
 
     return f'{hour}:{minute}', diff
 
@@ -74,6 +71,9 @@ def notify_on_time(time, new_channel, member, prj, DM, guild):
     if not CATEGORY:
         set_category(guild)
     if new_channel.name not in str([c for c in CATEGORY.channels]):
+        return
+    # すでにチャンネルにいる場合
+    if member.voice and member.voice.channel.name == new_channel.name:
         return
     elif member.voice and member.voice.channel.name == WAITING_CHANNEL:
         # A: レビュー待機にいる場合
