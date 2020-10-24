@@ -53,9 +53,10 @@ def get_time(s_time):
     mnow = datetime.now(TIMEZONE).strftime('%m')
     dnow = datetime.now(TIMEZONE).strftime('%d')
     input_time = datetime(year=int(ynow), month=int(mnow),
-                          day=int(dnow), hour=int(hour), minute=int(minute), tzinfo=TIMEZONE)
-    print("| rv", input_time, "| now", datetime.now(TIMEZONE))
-    diff_timedelta = input_time - datetime.now(TIMEZONE)
+                          day=int(dnow), hour=int(hour), minute=int(minute))
+    aware_time = TIMEZONE.localize(input_time)
+    print("| ip", input_time, "| aw ", aware_time, "| now", datetime.now(TIMEZONE))
+    diff_timedelta = aware_time - datetime.now(TIMEZONE)
     diff = diff_timedelta.total_seconds()
     print(diff)
     # late || soon
