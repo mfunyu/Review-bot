@@ -147,10 +147,13 @@ async def on_message(message):
             return
         reply = ''
         user = message.author.name
-        for channel in [c for c in CATEGORY.channels]:
+        for channel in CATEGORY.channels:
             if user in channel.name:
                 reply += f'\"{channel.name}\" '
-                await channel.delete()
+                try:
+                    await channel.delete()
+                except:
+                    pass
         if not reply:
             reaction = '❓'
             reply = '{}を含むチャンネルはありませんでした'.format(user)

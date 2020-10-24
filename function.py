@@ -1,7 +1,7 @@
 import discord
 import re
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import sched
 import time
@@ -53,17 +53,18 @@ def get_time(s_time):
     mnow = datetime.now(TIMEZONE).strftime('%m')
     dnow = datetime.now(TIMEZONE).strftime('%d')
     input_time = datetime(year=int(ynow), month=int(mnow),
-                          day=int(dnow), hour=int(hour), minute=int(minute))
-    diff_timedelta = input_time.astimezone() - datetime.now(TIMEZONE)
+                          day=int(dnow), hour=int(hour), minute=int(minute), tzinfo=TIMEZONE)
+    print("| rv", input_time, "| now", datetime.now(TIMEZONE))
+    diff_timedelta = input_time - datetime.now(TIMEZONE)
     diff = diff_timedelta.total_seconds()
-
+    print(diff)
     # late || soon
     if (-3600 <= diff <= 30):
         diff = 0
     # tomorrow
     elif (diff < 0):
         diff += 60 * 60 * 24
-    print(diff, "| rv", input_time.astimezone(), "| now", datetime.now(TIMEZONE))
+    print(diff, "| rv", input_time.astimezone(), "| now", datetime.now(timezone.utc))
 
     return f'{hour}:{minute}', diff
 
