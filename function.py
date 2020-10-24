@@ -44,7 +44,7 @@ def match_name(name, target):
 # レビューの開始時間を読み込む （エラー処理まだ)
 def get_time(s_time):
 
-    ''.join(s_time.split(':'))
+    s_time = ''.join(s_time.split(':'))
     minute = s_time[-2:]
     hour = '0' + s_time[:-2]
     hour = str(int(hour[-2:]) % 24)
@@ -64,7 +64,7 @@ def get_time(s_time):
     elif (diff < 0):
         diff += 60 * 60 * 24
 
-    print(diff)
+    print(diff, TIMEZONE, "| rv", input_time.astimezone(TIMEZONE), "| now", datetime.now(TIMEZONE))
     return f'{hour}:{minute}', diff
 
 
