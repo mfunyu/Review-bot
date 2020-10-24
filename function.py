@@ -54,7 +54,7 @@ def get_time(s_time):
     dnow = datetime.now(TIMEZONE).strftime('%d')
     input_time = datetime(year=int(ynow), month=int(mnow),
                           day=int(dnow), hour=int(hour), minute=int(minute))
-    diff_timedelta = input_time.astimezone(TIMEZONE) - datetime.now(TIMEZONE)
+    diff_timedelta = input_time.astimezone() - datetime.now(TIMEZONE)
     diff = diff_timedelta.total_seconds()
 
     # late || soon
@@ -63,8 +63,8 @@ def get_time(s_time):
     # tomorrow
     elif (diff < 0):
         diff += 60 * 60 * 24
+    print(diff, "| rv", input_time.astimezone(), "| now", datetime.now(TIMEZONE))
 
-    print(diff, TIMEZONE, "| rv", input_time.astimezone(TIMEZONE), "| now", datetime.now(TIMEZONE))
     return f'{hour}:{minute}', diff
 
 
