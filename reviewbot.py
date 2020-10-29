@@ -78,6 +78,8 @@ async def on_message(message):
         if guild.name == GUILD:
             break
 
+    global CATEGORY
+
     msg = message.content.split()
 
     # ヘルプ：botの使い方を表示する
