@@ -6,32 +6,22 @@
 import discord
 from datetime import datetime
 import threading
-import settings
+import constant
 
 import messege as msgs
 import function as func
+import constant as co
 
-# for debugging use ---
-# import settings_test as settings
-
-# envファイルに設定したbotのトークンを取得
-TOKEN = settings.DISCORD_TOKEN
-# guild名
-GUILD = settings.GUILD
-# ボイスチャンネルのカテゴリー名
-VOICE_CATEGORY = '📝Project Review'
-# レビュー待機コーナー名
-WAITING_CHANNEL = 'レビュー待機'
+TOKEN = co.TOKEN
+TIMEZONE = co.TIMEZONE
+GUILD = co.GUILD
+VOICE_CATEGORY = co.VOICE_CATEGORY
+WAITING_CHANNEL = co.WAITING_CHANNEL
 
 CATEGORY = ""
 
 # 接続に必要なオブジェクトを生成
 client = discord.Client()
-
-TIMEZONE = func.TIMEZONE
-
-
-EXCLAMATION = '\N{Heavy Exclamation Mark Symbol}'
 
 
 # for debugging use ---
@@ -127,7 +117,7 @@ async def on_message(message):
                                                        status, vc))
             if str(member.status) != 'online':
                 reply = f'{member.name}さんはオンラインではない可能性があります。'
-                await msgs.react_and_send_msg(message, EXCLAMATION, reply)
+                await msgs.react_and_send_msg(message, co.EXCLAMATION, reply)
         await message.add_reaction('✅')
 
     elif (message.content == "/clear"
@@ -173,7 +163,7 @@ async def on_message(message):
                                      func.get_time(msg[2])[0])
         else:
             reply = "チャンネル名を指定してください ex) /text ex00"
-            await msgs.react_and_send_msg(message, EXCLAMATION, reply)
+            await msgs.react_and_send_msg(message, co.EXCLAMATION, reply)
             return
         new_channel = await CATEGORY.create_text_channel(name=name)
         reply = f'テキストチャンネル{new_channel.mention}を作成しました'
@@ -182,7 +172,7 @@ async def on_message(message):
     elif message.content.startswith("/cancel"):
         if len(msg) != 3:
             reply = "チャンネル名を指定してください ex) /cancel ex00 2342"
-            await msgs.react_and_send_msg(message, EXCLAMATION, reply)
+            await msgs.react_and_send_msg(message, co.EXCLAMATION, reply)
             return
         prj = msg[1]
         user = message.author.name

@@ -1,24 +1,19 @@
 import discord
 import re
 
-from datetime import datetime, timezone
-
+from datetime import datetime
 import sched
 import time
-import pytz
 import asyncio
 
-import settings
-# import settings_test as settings
+import constant
 import messege as msgs
 
-TIMEZONE = pytz.timezone('Asia/Tokyo')
-# ボイスチャンネルのカテゴリー名
-VOICE_CATEGORY = '📝Project Review'
-# レビュー待機コーナー名
-WAITING_CHANNEL = 'レビュー待機'
+GUILD = constant.GUILD
+VOICE_CATEGORY = constant.VOICE_CATEGORY
+WAITING_CHANNEL = constant.WAITING_CHANNEL
+TIMEZONE = constant.TIMEZONE
 
-GUILD = settings.GUILD
 CATEGORY = ""
 
 # 接続に必要なオブジェクトを生成

@@ -1,1 +1,1 @@
-worker: python3 reviewbot.py
+discordbot: python3 reviewbot.py
