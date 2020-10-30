@@ -6,8 +6,7 @@ TOKEN = settings.DISCORD_TOKEN
 VOICE_CATEGORY = settings.VOICE_CATEGORY
 
 # guild名
-# GUILD = "42Tokyo_42cursus"
-GUILD = "U_personal"
+GUILD = "42Tokyo_42cursus"
 WAITING_CHANNEL = 'レビュー待機'
 
 TIMEZONE = pytz.timezone('Asia/Tokyo')
