@@ -100,7 +100,6 @@ async def on_message(message):
             or message.content == "/done"
             or message.content == "/del"
             or message.content == "/rm"):
-        cnt_use(message.content)
         if func.status_in_vc(message.author, guild):
             vc = message.author.voice
             name = vc.channel.name.replace('/', '-').replace(':', '')[:-1]
