@@ -24,41 +24,19 @@ CATEGORY = ""
 client = discord.Client()
 
 
-# for debugging use ---
-RM = 0
-CLEAR = 0
-DEL = 0
-DONE = 0
-
-
-def cnt_use(msg):
-    global RM, CLEAR, DEL, DONE
-    if msg == "/rm":
-        RM += 1
-    elif msg == "/clear":
-        CLEAR += 1
-    elif msg == "/del":
-        DEL += 1
-    elif msg == "/done":
-        DONE += 1
-# ---------------------
-
-
-# 起動時に動作する処理
-@client.event
-async def on_ready():
-    # guildを指定
-    for guild in client.guilds:
-        if guild.name == GUILD:
-            break
-
-    global CATEGORY
-    CATEGORY = discord.utils.get(guild.categories, name=VOICE_CATEGORY)
-
-
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
+
+    global CATEGORY
+    if not CATEGORY:
+        # guild を指定
+        for guild in client.guilds:
+            if guild.name == GUILD:
+                break
+        # カテゴリーを指定
+        CATEGORY = discord.utils.get(guild.categories, name=VOICE_CATEGORY)
+
     # メッセージ送信者がBotだった場合は無視する
     if message.author.bot:
         return
@@ -67,8 +45,6 @@ async def on_message(message):
     for guild in client.guilds:
         if guild.name == GUILD:
             break
-
-    global CATEGORY
 
     msg = message.content.split()
 
