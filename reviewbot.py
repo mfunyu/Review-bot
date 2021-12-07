@@ -87,9 +87,12 @@ async def on_message(message):
             status = func.status_in_vc(message.author, guild)
             if status:
                 vc = message.author.voice
+            username = message.author.nick
+            if not username:
+                username = message.author.name
             await msgs.send_msg(member.dm_channel,
                                 await msgs.call_person(member.name,
-                                                       message.author.nick,
+                                                       username,
                                                        status, vc))
             if str(member.status) != 'online':
                 reply = f'{member.name}さんはオンラインではない可能性があります。'
@@ -113,14 +116,16 @@ async def on_message(message):
             await msgs.react_and_send_msg(message, '👏', reply)
             return
         reply = ''
-        user = message.author.nick
+        username = message.author.nick
+        if not username:
+            username = message.author.name
         for channel in CATEGORY.channels:
-            if user in channel.name:
+            if username in channel.name:
                 reply += f'\"{channel.name}\" '
                 await channel.delete()
         if not reply:
             reaction = '❓'
-            reply = '{}を含むチャンネルはありませんでした'.format(user)
+            reply = '{}を含むチャンネルはありませんでした'.format(username)
         else:
             reaction = '✅'
             reply += 'を削除しました'
@@ -128,14 +133,16 @@ async def on_message(message):
 
     elif message.content.startswith("/text"):
         ch_name = ''
+        username = message.author.nick
+        if not username:
+            username = message.author.name
         if func.status_in_vc(message.author, guild):
             vc = message.author.voice
             ch_name = vc.channel.name.replace('/', '-')
         elif len(msg) == 2:
-            ch_name = '{}-{}'.format(msg[1], message.author.nick)
+            ch_name = '{}-{}'.format(msg[1], username)
         elif len(msg) == 3:
-            ch_name = '{}-{}-{}'.format(msg[1], message.author.nick,
-                                     func.get_time(msg[2])[0])
+            ch_name = '{}-{}-{}'.format(msg[1], username, func.get_time(msg[2])[0])
         else:
             reply = "チャンネル名を指定してください ex) /text ex00"
             await msgs.react_and_send_msg(message, co.EXCLAMATION, reply)
@@ -150,9 +157,11 @@ async def on_message(message):
             await msgs.react_and_send_msg(message, co.EXCLAMATION, reply)
             return
         prj = msg[1]
-        user = message.author.nick
+        username = message.author.nick
+        if not username:
+            username = message.author.name
         time = func.get_time(msg[2])[0]
-        ch_name = '{}/{}/{}~'.format(prj, user, time)
+        ch_name = '{}/{}/{}~'.format(prj, username, time)
         if ch_name in str([c for c in CATEGORY.channels]):
             channel = discord.utils.get(guild.channels, name=ch_name)
             await channel.delete()
@@ -167,9 +176,11 @@ async def on_message(message):
         if len(msg) != 2 or not msg[1].split(':')[0].isdigit():
             return
         prj = msg[0][1:]
-        user = message.author.nick
+        username = message.author.nick
+        if not username:
+            username = message.author.name
         time, diff = func.get_time(msg[1])
-        ch_name = '{}/{}/{}~'.format(prj, user, time)
+        ch_name = '{}/{}/{}~'.format(prj, username, time)
         if ch_name in str([c for c in CATEGORY.channels]):
             reply = f'ボイスチャンネル {ch_name} はすでに存在しています'
             await msgs.react_and_send_msg(message, '❓', reply)
