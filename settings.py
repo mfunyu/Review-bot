@@ -11,5 +11,7 @@ load_dotenv(verbose=True)
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
-DISCORD_TOKEN = os.getenv("FT_DISCORD_TOKEN")
+DISCORD_TOKEN = os.getenv("MY_DISCORD_TOKEN")
+APPLICATION_ID = os.getenv("MY_APPLICATION_ID")
+GUILD_ID = os.getenv("MY_GUILD_ID")
 VOICE_CATEGORY = os.environ["VOICE_CATEGORY"]

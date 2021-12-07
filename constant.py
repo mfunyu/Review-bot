@@ -3,6 +3,8 @@ import pytz
 
 # 環境変数
 TOKEN = settings.DISCORD_TOKEN
+GUILD_ID = settings.GUILD_ID
+APPLICATION_ID = settings.APPLICATION_ID
 VOICE_CATEGORY = settings.VOICE_CATEGORY
 
 # guild名

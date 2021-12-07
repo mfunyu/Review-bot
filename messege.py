@@ -10,9 +10,8 @@ async def send_msg_check(msg, reaction, reply):
     await msg.channel.send(reply)
 
 
-async def react_and_send_msg(msg, reaction, reply):
-    await msg.add_reaction(reaction)
-    await msg.channel.send(reply)
+async def react_and_send_msg(ctx, reaction, reply):
+    await ctx.channel.send(reply)
 
 
 async def create_help() -> Embed:
