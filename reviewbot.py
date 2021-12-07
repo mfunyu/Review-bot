@@ -89,7 +89,7 @@ async def on_message(message):
                 vc = message.author.voice
             await msgs.send_msg(member.dm_channel,
                                 await msgs.call_person(member.name,
-                                                       message.author.name,
+                                                       message.author.nick,
                                                        status, vc))
             if str(member.status) != 'online':
                 reply = f'{member.name}さんはオンラインではない可能性があります。'
@@ -113,7 +113,7 @@ async def on_message(message):
             await msgs.react_and_send_msg(message, '👏', reply)
             return
         reply = ''
-        user = message.author.name
+        user = message.author.nick
         for channel in CATEGORY.channels:
             if user in channel.name:
                 reply += f'\"{channel.name}\" '
@@ -132,9 +132,9 @@ async def on_message(message):
             vc = message.author.voice
             name = vc.channel.name.replace('/', '-')
         elif len(msg) == 2:
-            name = '{}-{}'.format(msg[1], message.author.name)
+            name = '{}-{}'.format(msg[1], message.author.nick)
         elif len(msg) == 3:
-            name = '{}-{}-{}'.format(msg[1], message.author.name,
+            name = '{}-{}-{}'.format(msg[1], message.author.nick,
                                      func.get_time(msg[2])[0])
         else:
             reply = "チャンネル名を指定してください ex) /text ex00"
@@ -150,7 +150,7 @@ async def on_message(message):
             await msgs.react_and_send_msg(message, co.EXCLAMATION, reply)
             return
         prj = msg[1]
-        user = message.author.name
+        user = message.author.nick
         time = func.get_time(msg[2])[0]
         name = '{}/{}/{}~'.format(prj, user, time)
         if name in str([c for c in CATEGORY.channels]):
@@ -167,7 +167,7 @@ async def on_message(message):
         if len(msg) != 2 or not msg[1].split(':')[0].isdigit():
             return
         prj = msg[0][1:]
-        user = message.author.name
+        user = message.author.nick
         time, diff = func.get_time(msg[1])
         name = '{}/{}/{}~'.format(prj, user, time)
         if name in str([c for c in CATEGORY.channels]):
