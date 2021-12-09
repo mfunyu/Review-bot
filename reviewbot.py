@@ -52,19 +52,6 @@ async def on_message(message):
     if message.content.startswith("/help"):
         await msgs.send_msg(message.channel, await msgs.create_help())
 
-    elif message.content.startswith("/issue"):
-        print("issue: {} | {}".format(message.content[7:],
-                                      str(datetime.now(TIMEZONE))))
-        await message.add_reaction('✅')
-        await message.add_reaction('🙇')
-
-    elif message.content.startswith("/show stat"):
-        print("============")
-        print("RM: ", RM)
-        print("CLEAR: ", CLEAR)
-        print("DONE: ", DONE)
-        print("DEL: ", DEL)
-
     # 呼び出し：名前を指定して相手にdmを送る
     elif message.content.startswith("/call"):
         if len(msg) != 2:
@@ -108,13 +95,8 @@ async def on_message(message):
             username = message.author.name
         if func.status_in_vc(message.author, guild):
             vc = message.author.voice
-            ch_name = vc.channel.name.replace('/', '-').replace(':', '')[:-1]
-            if username in ch_name:
+            if username in vc.channel.name:
                 await vc.channel.delete()
-                # delete text channel
-                if ch_name in str([c for c in CATEGORY.channels]):
-                    channel = discord.utils.get(guild.channels, name=ch_name)
-                    await channel.delete()
                 await message.add_reaction('✅')
                 reply = 'レビューお疲れ様でした :)'
                 await msgs.react_and_send_msg(message, '👏', reply)
@@ -131,46 +113,6 @@ async def on_message(message):
             reaction = '✅'
             reply += 'を削除しました'
         await msgs.react_and_send_msg(message, reaction, reply)
-
-    elif message.content.startswith("/text"):
-        ch_name = ''
-        username = message.author.nick
-        if not username:
-            username = message.author.name
-        if func.status_in_vc(message.author, guild):
-            vc = message.author.voice
-            ch_name = vc.channel.name.replace('/', '-')
-        elif len(msg) == 2:
-            ch_name = '{}-{}'.format(msg[1], username)
-        elif len(msg) == 3:
-            ch_name = '{}-{}-{}'.format(msg[1], username, func.get_time(msg[2])[0])
-        else:
-            reply = "チャンネル名を指定してください ex) /text ex00"
-            await msgs.react_and_send_msg(message, co.EXCLAMATION, reply)
-            return
-        new_channel = await CATEGORY.create_text_channel(name=ch_name)
-        reply = f'テキストチャンネル{new_channel.mention}を作成しました'
-        await msgs.react_and_send_msg(message, '✅', reply)
-
-    elif message.content.startswith("/cancel"):
-        if len(msg) != 3:
-            reply = "チャンネル名を指定してください ex) /cancel ex00 2342"
-            await msgs.react_and_send_msg(message, co.EXCLAMATION, reply)
-            return
-        prj = msg[1]
-        username = message.author.nick
-        if not username:
-            username = message.author.name
-        time = func.get_time(msg[2])[0]
-        ch_name = '{}/{}/{}~'.format(prj, username, time)
-        if ch_name in str([c for c in CATEGORY.channels]):
-            channel = discord.utils.get(guild.channels, name=ch_name)
-            await channel.delete()
-            await message.add_reaction('✅')
-        else:
-            reply = '該当するチャンネルが見当たりません。チャンネル名を確認してください。'
-            await msgs.react_and_send_msg(message, '❓', reply)
-        # スレッドをキャンセルしたいけどできない…
 
     # レビュワーがレビュー用チャンネルを立てる
     elif message.content.startswith("/"):
