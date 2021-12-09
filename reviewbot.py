@@ -103,22 +103,23 @@ async def on_message(message):
             or message.content == "/done"
             or message.content == "/del"
             or message.content == "/rm"):
-        if func.status_in_vc(message.author, guild):
-            vc = message.author.voice
-            ch_name = vc.channel.name.replace('/', '-').replace(':', '')[:-1]
-            await vc.channel.delete()
-            # delete text channel
-            if ch_name in str([c for c in CATEGORY.channels]):
-                channel = discord.utils.get(guild.channels, name=ch_name)
-                await channel.delete()
-            await message.add_reaction('✅')
-            reply = 'レビューお疲れ様でした :)'
-            await msgs.react_and_send_msg(message, '👏', reply)
-            return
-        reply = ''
         username = message.author.nick
         if not username:
             username = message.author.name
+        if func.status_in_vc(message.author, guild):
+            vc = message.author.voice
+            ch_name = vc.channel.name.replace('/', '-').replace(':', '')[:-1]
+            if username in ch_name:
+                await vc.channel.delete()
+                # delete text channel
+                if ch_name in str([c for c in CATEGORY.channels]):
+                    channel = discord.utils.get(guild.channels, name=ch_name)
+                    await channel.delete()
+                await message.add_reaction('✅')
+                reply = 'レビューお疲れ様でした :)'
+                await msgs.react_and_send_msg(message, '👏', reply)
+                return
+        reply = ''
         for channel in CATEGORY.channels:
             if username in channel.name:
                 reply += f'\"{channel.name}\" '
