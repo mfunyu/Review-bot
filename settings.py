@@ -13,3 +13,5 @@ load_dotenv(dotenv_path=env_path)
 
 DISCORD_TOKEN = os.getenv("FT_DISCORD_TOKEN")
 VOICE_CATEGORY = os.environ["VOICE_CATEGORY"]
+CLIENT_UID = os.getenv("CLIENT_UID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
