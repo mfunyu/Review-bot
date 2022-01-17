@@ -57,7 +57,7 @@ class ReviewStat:
         results = self.get_scale_teams()
         for r in results:
             project_name = self.get_project_name(r)
-            if project_name == "C Piscine C":
+            if "C Piscine C" in project_name:
                 continue
             d = self.create_list(project_name, r)
             self.d_reviews.update(d)
