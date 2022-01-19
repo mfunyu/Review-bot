@@ -45,16 +45,18 @@ module.exports = {
       const hour = interaction.options.getInteger('hour');
       const min = interaction.options.getInteger('min');
       const user = interaction.options.getUser('reviewer');
+      const guild = interaction.member.guild;
 
       if (user) {
-        let guild = interaction.member.guild;
         let member = guild.members.resolve(user.id);
         uname = member ? member.displayName : null;
       } else {
         uname = interaction.member.displayName;
       }
+
       channel_name = project + '/' + uname + '/' + hour + ':' + min + '~';
-      await interaction.reply(channel_name + ' created');
+      await guild.channels.create(channel_name, { type: 'GUILD_VOICE' })
+      await interaction.reply({ content: channel_name + ' を作成しました', ephemeral: true });
     }
   }
 }
