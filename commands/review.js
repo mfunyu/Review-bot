@@ -55,7 +55,8 @@ module.exports = {
 			}
 
 			channel_name = project + '/' + uname + '/' + hour + ':' + min + '~';
-			await guild.channels.create(channel_name, { type: 'GUILD_VOICE' })
+			const category = guild.channels.cache.find((channel) => channel.name === '📝 Project Review');
+			await guild.channels.create(channel_name, { type: 'GUILD_VOICE', parent: category })
 			await interaction.reply({ content: channel_name + ' を作成しました', ephemeral: true });
 		}
 	}
