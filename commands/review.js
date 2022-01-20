@@ -41,14 +41,26 @@ module.exports = {
 	},
 	async execute(interaction) {
 		if (interaction.commandName == 'review') {
+			const guild = interaction.member.guild;
 			const channelName = createChannelName(interaction);
 
-			const guild = interaction.member.guild;
+			if (channelExist(guild, channelName)) {
+				await interaction.reply({ content: 'レビューチャンネル ' + channelName + ' はすでに存在しています', ephemeral: true });
+				return
+			}
+
 			const category = guild.channels.cache.find((channel) => channel.name === '📝 Project Review');
 			await guild.channels.create(channelName, { type: 'GUILD_VOICE', parent: category })
 			await interaction.reply({ content: channelName + ' を作成しました', ephemeral: true });
 		}
 	}
+}
+
+function channelExist(guild, channelName) {
+	const channel = guild.channels.cache.find((channel) => channel.name === channelName);
+	if (channel)
+		return true;
+	return false;
 }
 
 function getDisplayName(interaction, user) {
