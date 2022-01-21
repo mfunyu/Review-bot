@@ -1,3 +1,5 @@
+const vals = require("../choices.js");
+
 module.exports = {
 	data: {
 		name: 'review',
@@ -24,12 +26,14 @@ module.exports = {
 				description: 'review starting time h',
 				type: 'INTEGER',
 				required: true,
+				choices: vals.hours,
 			},
 			{
 				name: 'min',
 				description: 'review starting time m',
 				type: 'INTEGER',
 				required: true,
+				choices: vals.mins,
 			},
 			{
 				name: 'reviewer',
