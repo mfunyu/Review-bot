@@ -50,11 +50,11 @@ module.exports = {
 
 			if (channelExist(guild, channelName)) {
 				await interaction.reply({ content: 'レビューチャンネル ' + channelName + ' はすでに存在しています', ephemeral: true });
-				return
+				return;
 			}
 
 			const category = guild.channels.cache.find((channel) => channel.name === '📝 Project Review');
-			await guild.channels.create(channelName, { type: 'GUILD_VOICE', parent: category })
+			await category.createChannel(channelName, { type: 'GUILD_VOICE' });
 			await interaction.reply({ content: channelName + ' を作成しました', ephemeral: true });
 		}
 	}
