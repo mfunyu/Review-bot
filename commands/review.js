@@ -81,12 +81,22 @@ function getDisplayName(interaction, user) {
 
 function createChannelName(interaction) {
 	const projectName = interaction.options.getString('project_name');
-	const hour = interaction.options.getInteger('hour');
-	const min = interaction.options.getInteger('min');
 	const user = interaction.options.getUser('reviewer');
 
-	userName = getDisplayName(interaction, user);
-	channelName = projectName + '/' + userName + '/' + hour + ':' + min + '~';
+	const userName = getDisplayName(interaction, user);
+	const time = getTime(interaction);
+
+	const channelName = projectName + '/' + userName + '/' + time;
 
 	return channelName;
+}
+
+function getTime(interaction) {
+	const hour = interaction.options.getInteger('hour');
+	let min = interaction.options.getInteger('min');
+
+	if (min == 0)
+		min = '0' + min;
+
+	return hour + ':' + min + '~';
 }
