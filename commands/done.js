@@ -39,10 +39,16 @@ module.exports = {
 					}
 				});
 			}
+			if (current) {
+				const ch = getConnectingVoiceChannel(interaction);
+				if (!ch) {
+					await interaction.reply({ content: '入室中のボイスチャンネルがありません', ephemeral: true });
+					return;
+				}
+				deleteChannels.push(ch);
+			}
 
 			let channelNames;
-
-			console.log(deleteChannels);
 			for (channel of deleteChannels) {
 				channelNames += channel.name + '\n';
 				await channel.delete();
@@ -50,4 +56,11 @@ module.exports = {
 			await interaction.reply({ content: channelNames + 'を削除しました', ephemeral: true });
 		}
 	}
+}
+
+function getConnectingVoiceChannel(interaction) {
+	const channel_id = interaction.member.voice.channelId;
+	if (!channel_id)
+		return
+	return guild.channels.cache.find((channel) => channel.id === channel_id);
 }
