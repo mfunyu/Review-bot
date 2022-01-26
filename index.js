@@ -20,7 +20,7 @@ client.once('ready', async () => {
 	for (const commandName in commands) {
 		data.push(commands[commandName].data)
 	}
-	await client.application.commands.set(data, '703838660080042015');
+	await client.application.commands.set(data, process.env.SERVER_ID);
 	console.log('Ready!');
 });
 
