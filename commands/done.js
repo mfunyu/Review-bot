@@ -46,10 +46,11 @@ module.exports = {
 			}
 
 			let channelNames;
-			for (channel of deleteChannels) {
-				channelNames += channel.name + '\n';
-				await channel.delete();
-			}
+			deleteChannels.forEach(currentChannel => {
+				channelNames += currentChannel.name + '\n';
+			});
+			deleteSelectedChannels(deleteChannels);
+
 			await interaction.reply({ content: channelNames + 'を削除しました', ephemeral: true });
 		}
 	}
@@ -58,6 +59,11 @@ module.exports = {
 function getConnectingVoiceChannel(interaction) {
 	const channel_id = interaction.member.voice.channelId;
 	if (!channel_id)
-		return
+		return;
 	return interaction.member.guild.channels.cache.find((channel) => channel.id === channel_id);
+}
+
+async function deleteSelectedChannels(deleteChannels) {
+	for (channel of deleteChannels)
+		await channel.delete();
 }
