@@ -17,7 +17,7 @@ module.exports = {
 			},
 		]
 	},
-	async execute(interaction) {
+	async execute(interaction, Discord) {
 		if (interaction.commandName == 'done') {
 			const guild = interaction.member.guild;
 

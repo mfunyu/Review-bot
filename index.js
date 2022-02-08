@@ -1,5 +1,6 @@
 const fs = require('fs')
 const { Client, Intents } = require('discord.js');
+const Discord = require('discord.js');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -30,7 +31,7 @@ client.on('interactionCreate', async (interaction) => {
 	}
 	const command = commands[interaction.commandName];
 	try {
-		await command.execute(interaction);
+		await command.execute(interaction, Discord);
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({
