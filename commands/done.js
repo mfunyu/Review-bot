@@ -47,6 +47,27 @@ module.exports = {
 					deleteChannels.push(ch);
 					break;
 				case 'choose':
+					let msg_lists = '以下のチャンネルが見つかりました。削除したいチャンネルの番号を選択してください\n';
+					let index = 0;
+					const row = new Discord.MessageActionRow()
+					channels.forEach(currentChannel => {
+						if (currentChannel.name.includes('/' + userName + '/')) {
+							msg_lists += index + ': ' + currentChannel.name + '\n';
+							row.addComponents(
+								new Discord.MessageButton()
+									.setCustomId('button' + index.toString())
+									.setLabel(index.toString())
+									.setStyle('PRIMARY'),
+							);
+							index++;
+						}
+					});
+					if (!msg_lists) {
+						await interaction.reply({ content: userName + 'を含むボイスチャンネルがありません', ephemeral: true });
+						return;
+					}
+
+					await interaction.reply({ content: msg_lists, ephemeral: true, components: [row] });
 					return;
 			}
 
