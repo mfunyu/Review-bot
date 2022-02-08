@@ -10,9 +10,9 @@ module.exports = {
 				required: true,
 				default: 'one',
 				choices: [
-					{ name: 'one', value: 'one', },
 					{ name: 'all', value: 'all', },
 					{ name: 'current', value: 'current', },
+					{ name: 'choose', value: 'choose', },
 				],
 			},
 		]
@@ -46,8 +46,8 @@ module.exports = {
 					}
 					deleteChannels.push(ch);
 					break;
-				default:
-					break;
+				case 'choose':
+					return;
 			}
 
 			let channelNames;
