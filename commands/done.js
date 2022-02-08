@@ -28,21 +28,26 @@ module.exports = {
 
 			const channels = category.children;
 			const deleteChannels = []
+			let ch;
 
-			if (selection == 'all') {
-				channels.forEach(currentChannel => {
-					if (currentChannel.name.includes('/' + userName + '/')) {
-						deleteChannels.push(currentChannel);
+			switch (selection) {
+				case 'all':
+					channels.forEach(currentChannel => {
+						if (currentChannel.name.includes('/' + userName + '/')) {
+							deleteChannels.push(currentChannel);
+						}
+					});
+					break;
+				case 'current':
+					ch = getConnectingVoiceChannel(interaction);
+					if (!ch) {
+						await interaction.reply({ content: '入室中のボイスチャンネルがありません', ephemeral: true });
+						return;
 					}
-				});
-			}
-			if (selection == 'current') {
-				const ch = getConnectingVoiceChannel(interaction);
-				if (!ch) {
-					await interaction.reply({ content: '入室中のボイスチャンネルがありません', ephemeral: true });
-					return;
-				}
-				deleteChannels.push(ch);
+					deleteChannels.push(ch);
+					break;
+				default:
+					break;
 			}
 
 			let channelNames;
