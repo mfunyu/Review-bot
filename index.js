@@ -2,6 +2,7 @@ const fs = require('fs')
 const { Client, Intents } = require('discord.js');
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
+const onclick = require('./onclick.js')
 
 dotenv.config();
 
@@ -26,6 +27,10 @@ client.once('ready', async () => {
 });
 
 client.on('interactionCreate', async (interaction) => {
+	if (interaction.isButton()) {
+		onclick.respond(interaction);
+		return;
+	}
 	if (!interaction.isCommand()) {
 		return;
 	}

@@ -55,7 +55,7 @@ module.exports = {
 							msg_lists += index + ': ' + currentChannel.name + '\n';
 							row.addComponents(
 								new Discord.MessageButton()
-									.setCustomId('button' + index.toString())
+									.setCustomId(currentChannel.name)
 									.setLabel(index.toString())
 									.setStyle('PRIMARY'),
 							);
