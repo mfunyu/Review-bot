@@ -47,7 +47,7 @@ module.exports = {
 					deleteChannels.push(ch);
 					break;
 				case 'choose':
-					let msg_lists = '以下のチャンネルが見つかりました。削除したいチャンネルの番号を選択してください\n';
+					let msg_lists = '';
 					let index = 0;
 					const row = new Discord.MessageActionRow()
 					channels.forEach(currentChannel => {
@@ -66,8 +66,8 @@ module.exports = {
 						await interaction.reply({ content: userName + 'を含むボイスチャンネルがありません', ephemeral: true });
 						return;
 					}
-
-					await interaction.reply({ content: msg_lists, ephemeral: true, components: [row] });
+					const message = '以下のチャンネルが見つかりました。削除したいチャンネルの番号を選択してください\n';
+					await interaction.reply({ content: message + msg_lists, ephemeral: true, components: [row] });
 					return;
 			}
 
