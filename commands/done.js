@@ -29,7 +29,7 @@ module.exports = {
 			const category = guild.channels.cache.find((channel) => channel.name === '📝 Project Review');
 
 			const channels = category.children;
-			const deleteChannels = []
+			const deleteChannels = [];
 			let ch;
 
 			switch (selection) {
@@ -57,12 +57,13 @@ module.exports = {
 					deleteChannels.push(ch);
 					break;
 				case 'choose':
+					var dict = ['zero', 'one', 'two', 'three', 'four'];
 					let msg_lists = '';
 					let index = 0;
 					const row = new Discord.MessageActionRow()
 					channels.forEach(currentChannel => {
 						if (currentChannel.name.includes('/' + userName + '/')) {
-							msg_lists += index + ': ' + currentChannel.name + '\n';
+							msg_lists += ':' + dict[index] + ':   ' + currentChannel.name + '\n';
 							row.addComponents(
 								new Discord.MessageButton()
 									.setCustomId(currentChannel.name)
