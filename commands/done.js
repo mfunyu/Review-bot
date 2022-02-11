@@ -71,7 +71,8 @@ module.exports = {
 					return;
 			}
 
-			let channelNames;
+			let channelNames = '';
+			deleteChannels.shift();
 			deleteChannels.forEach(currentChannel => {
 				channelNames += currentChannel.name + '\n';
 			});
