@@ -1,3 +1,5 @@
+const embed = require('../embed.js');
+
 module.exports = {
 	data: {
 		name: 'done',
@@ -32,16 +34,24 @@ module.exports = {
 
 			switch (selection) {
 				case 'all':
+					let found = false;
 					channels.forEach(currentChannel => {
 						if (currentChannel.name.includes('/' + userName + '/')) {
 							deleteChannels.push(currentChannel);
+							found = true;
 						}
 					});
+					if (!found) {
+						const msg = userName + 'を含むボイスチャンネルがありません';
+						await interaction.reply({ embeds: [embed.warning(msg)], ephemeral: true });
+						return;
+					}
 					break;
 				case 'current':
 					ch = getConnectingVoiceChannel(interaction);
 					if (!ch) {
-						await interaction.reply({ content: '入室中のボイスチャンネルがありません', ephemeral: true });
+						const msg = '入室中のボイスチャンネルがありません';
+						await interaction.reply({ embeds: [embed.warning(msg)], ephemeral: true });
 						return;
 					}
 					deleteChannels.push(ch);
@@ -63,11 +73,12 @@ module.exports = {
 						}
 					});
 					if (!msg_lists) {
-						await interaction.reply({ content: userName + 'を含むボイスチャンネルがありません', ephemeral: true });
+						const msg = userName + 'を含むボイスチャンネルがありません';
+						await interaction.reply({ embeds: [embed.warning(msg)], ephemeral: true });
 						return;
 					}
-					const message = '以下のチャンネルが見つかりました。削除したいチャンネルの番号を選択してください\n';
-					await interaction.reply({ content: message + msg_lists, ephemeral: true, components: [row] });
+					const msg = '以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n' + msg_lists;
+					await interaction.reply({ embeds: [embed.info(msg, msg_lists)], ephemeral: true, components: [row] });
 					return;
 			}
 
