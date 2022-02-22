@@ -1,15 +1,6 @@
-exports.notfound = function (message) {
-	const embed = {
-		title: ":warning: Not Found",
-		description: message,
-		color: 0xfdc23d,
-	}
-	return embed;
-}
-
 exports.warning = function (type, message) {
 	const embed = {
-		title: ":warning: " + type,
+		title: type,
 		description: message,
 		color: 0xfdc23d,
 	}
@@ -18,7 +9,7 @@ exports.warning = function (type, message) {
 
 exports.info = function (type, message) {
 	const embed = {
-		title: ":notepad_spiral: " + type,
+		title: type,
 		description: message,
 		color: 0x4548ef,
 	}

@@ -1,5 +1,5 @@
 const vals = require("../choices.js");
-const embed = require('../embed.js');
+const send = require('../send.js');
 
 module.exports = {
 	data: {
@@ -50,13 +50,13 @@ module.exports = {
 			const channelName = createChannelName(interaction);
 
 			if (channelExist(guild, channelName)) {
-				await interaction.reply({ embeds: [embed.warning("Duplicate", 'レビューチャンネル ' + channelName + ' はすでに存在しています')], ephemeral: true });
+				await send.reply(interaction, send.msgs["Duplicate"], channelName);
 				return;
 			}
 
 			const category = guild.channels.cache.find((channel) => channel.name === '📝 Project Review');
 			await category.createChannel(channelName, { type: 'GUILD_VOICE' });
-			await interaction.reply({ embeds: [embed.info("Created", channelName + ' を作成しました')], ephemeral: true });
+			await send.reply(interaction, send.msgs["Created"], channelName);
 		}
 	}
 }

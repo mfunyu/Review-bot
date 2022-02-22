@@ -1,19 +1,18 @@
 const embed = require('./embed.js');
+const send = require('./send.js');
 
 exports.respond = async function (interaction) {
-	await interaction.deferReply({
-		ephemeral: true
-	});
+	await send.deferReply(interaction);
+
 	const guild = interaction.member.guild;
 	const category = guild.channels.cache.find((channel) => channel.name === '📝 Project Review');
 	const channels = category.children;
 
 	const deleteChannel = channels.find((channel) => channel.name === interaction.customId);
 	if (!deleteChannel) {
-		await interaction.followUp({ embeds: [embed.notfound(interaction.customId + 'はすでに削除されています')], ephemeral: true });
-		return;
+		await send.followUp(interaction, send.msgs["DeteleAgain"], interaction.customId);
+		return
 	}
-
 	await deleteChannel.delete();
-	await interaction.followUp({ embeds: [embed.info("Delete", interaction.customId + 'を削除しました')], ephemeral: true });
+	await send.followUp(interaction, send.msgs["Deleted"], interaction.customId);
 }
