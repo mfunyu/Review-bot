@@ -43,7 +43,7 @@ module.exports = {
 					});
 					if (!found) {
 						const msg = userName + 'を含むボイスチャンネルがありません';
-						await interaction.reply({ embeds: [embed.warning(msg)], ephemeral: true });
+						await interaction.reply({ embeds: [embed.notfound(msg)], ephemeral: true });
 						return;
 					}
 					break;
@@ -51,7 +51,7 @@ module.exports = {
 					ch = getConnectingVoiceChannel(interaction);
 					if (!ch) {
 						const msg = '入室中のボイスチャンネルがありません';
-						await interaction.reply({ embeds: [embed.warning(msg)], ephemeral: true });
+						await interaction.reply({ embeds: [embed.notfound(msg)], ephemeral: true });
 						return;
 					}
 					deleteChannels.push(ch);
@@ -74,23 +74,23 @@ module.exports = {
 						}
 					});
 					if (!msg_lists) {
-						const msg = userName + 'を含むボイスチャンネルがありません';
-						await interaction.reply({ embeds: [embed.warning(msg)], ephemeral: true });
+						const msg = '`' + userName + '`を含むボイスチャンネルがありません';
+						await interaction.reply({ embeds: [embed.notfound(msg)], ephemeral: true });
 						return;
 					}
 					const msg = '以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n' + msg_lists;
-					await interaction.reply({ embeds: [embed.info(msg, msg_lists)], ephemeral: true, components: [row] });
+					await interaction.reply({ embeds: [embed.info("Choose", msg, msg_lists)], ephemeral: true, components: [row] });
 					return;
 			}
 
 			let channelNames = '';
-			deleteChannels.shift();
+			// deleteChannels.shift();
 			deleteChannels.forEach(currentChannel => {
 				channelNames += currentChannel.name + '\n';
 			});
 			deleteSelectedChannels(deleteChannels);
 
-			await interaction.reply({ content: channelNames + 'を削除しました', ephemeral: true });
+			await interaction.reply({ embeds: [embed.info("Deleted", channelNames + 'を削除しました')], ephemeral: true });
 		}
 	}
 }

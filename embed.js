@@ -1,4 +1,4 @@
-exports.warning = function (message) {
+exports.notfound = function (message) {
 	const embed = {
 		title: ":warning: Not Found",
 		description: message,
@@ -7,9 +7,18 @@ exports.warning = function (message) {
 	return embed;
 }
 
-exports.info = function (message) {
+exports.warning = function (type, message) {
 	const embed = {
-		title: ":notepad_spiral: Choose",
+		title: ":warning: " + type,
+		description: message,
+		color: 0xfdc23d,
+	}
+	return embed;
+}
+
+exports.info = function (type, message) {
+	const embed = {
+		title: ":notepad_spiral: " + type,
 		description: message,
 		color: 0x4548ef,
 	}

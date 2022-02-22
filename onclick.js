@@ -1,3 +1,5 @@
+const embed = require('./embed.js');
+
 exports.respond = async function (interaction) {
 	await interaction.deferReply({
 		ephemeral: true
@@ -8,10 +10,10 @@ exports.respond = async function (interaction) {
 
 	const deleteChannel = channels.find((channel) => channel.name === interaction.customId);
 	if (!deleteChannel) {
-		await interaction.followUp({ content: interaction.customId + 'はすでに削除されています', ephemeral: true });
+		await interaction.followUp({ embeds: [embed.notfound(interaction.customId + 'はすでに削除されています')], ephemeral: true });
 		return;
 	}
 
 	await deleteChannel.delete();
-	await interaction.followUp({ content: interaction.customId + 'を削除しました', ephemeral: true });
+	await interaction.followUp({ embeds: [embed.info("Delete", interaction.customId + 'を削除しました')], ephemeral: true });
 }
