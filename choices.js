@@ -4,7 +4,7 @@ module.exports.project = [
 	{ name: 'so_long', value: 'so_long' },
 	{ name: 'pipex', value: 'pipex' },
 	{ name: 'miniRT', value: 'miniRT' },
-]
+];
 
 module.exports.hours = [
 	{ name: '0', value: 0 },
@@ -31,11 +31,11 @@ module.exports.hours = [
 	{ name: '21', value: 21 },
 	{ name: '22', value: 22 },
 	{ name: '23', value: 23 },
-]
+];
 
 module.exports.mins = [
 	{ name: '0', value: 0 },
 	{ name: '15', value: 15 },
 	{ name: '30', value: 30 },
 	{ name: '45', value: 45 },
-]
+];

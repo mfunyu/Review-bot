@@ -12,12 +12,12 @@ module.exports = {
 				required: true,
 				default: 'one',
 				choices: [
-					{ name: 'all', value: 'all', },
-					{ name: 'current', value: 'current', },
-					{ name: 'choose', value: 'choose', },
+					{ name: 'all', value: 'all' },
+					{ name: 'current', value: 'current' },
+					{ name: 'choose', value: 'choose' },
 				],
 			},
-		]
+		],
 	},
 	async execute(interaction, Discord) {
 		if (interaction.commandName == 'done') {
@@ -26,7 +26,9 @@ module.exports = {
 			const userName = interaction.member.displayName;
 
 			const selection = interaction.options.getString('selection');
-			const category = guild.channels.cache.find((channel) => channel.name === '📝 Project Review');
+			const category = guild.channels.cache.find(
+				(channel) => channel.name === '📝 Project Review',
+			);
 
 			const channels = category.children;
 			const deleteChannels = [];
@@ -35,15 +37,21 @@ module.exports = {
 			switch (selection) {
 				case 'all':
 					let found = false;
-					channels.forEach(currentChannel => {
-						if (currentChannel.name.includes('/' + userName + '/')) {
+					channels.forEach((currentChannel) => {
+						if (
+							currentChannel.name.includes('/' + userName + '/')
+						) {
 							deleteChannels.push(currentChannel);
 							found = true;
 						}
 					});
 					if (!found) {
-						const msg = userName + 'を含むボイスチャンネルがありません';
-						await interaction.reply({ embeds: [embed.notfound(msg)], ephemeral: true });
+						const msg =
+							userName + 'を含むボイスチャンネルがありません';
+						await interaction.reply({
+							embeds: [embed.notfound(msg)],
+							ephemeral: true,
+						});
 						return;
 					}
 					break;
@@ -51,7 +59,10 @@ module.exports = {
 					ch = getConnectingVoiceChannel(interaction);
 					if (!ch) {
 						const msg = '入室中のボイスチャンネルがありません';
-						await interaction.reply({ embeds: [embed.notfound(msg)], ephemeral: true });
+						await interaction.reply({
+							embeds: [embed.notfound(msg)],
+							ephemeral: true,
+						});
 						return;
 					}
 					deleteChannels.push(ch);
@@ -60,49 +71,73 @@ module.exports = {
 					var dict = ['zero', 'one', 'two', 'three', 'four'];
 					let msg_lists = '';
 					let index = 0;
-					const row = new Discord.MessageActionRow()
-					channels.forEach(currentChannel => {
-						if (currentChannel.name.includes('/' + userName + '/')) {
-							msg_lists += ':' + dict[index] + ':   ' + currentChannel.name + '\n';
+					const row = new Discord.MessageActionRow();
+					channels.forEach((currentChannel) => {
+						if (
+							currentChannel.name.includes('/' + userName + '/')
+						) {
+							msg_lists +=
+								':' +
+								dict[index] +
+								':   ' +
+								currentChannel.name +
+								'\n';
 							row.addComponents(
 								new Discord.MessageButton()
 									.setCustomId(currentChannel.name)
 									.setLabel(index.toString())
-									.setStyle('PRIMARY'),
+									.setStyle('PRIMARY')
 							);
 							index++;
 						}
 					});
 					if (!msg_lists) {
-						const msg = '`' + userName + '`を含むボイスチャンネルがありません';
-						await interaction.reply({ embeds: [embed.notfound(msg)], ephemeral: true });
+						const msg =
+							'`' +
+							userName +
+							'`を含むボイスチャンネルがありません';
+						await interaction.reply({
+							embeds: [embed.notfound(msg)],
+							ephemeral: true,
+						});
 						return;
 					}
-					const msg = '以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n' + msg_lists;
-					await interaction.reply({ embeds: [embed.info("Choose", msg, msg_lists)], ephemeral: true, components: [row] });
+					const msg =
+						'以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n' +
+						msg_lists;
+					await interaction.reply({
+						embeds: [embed.info('Choose', msg, msg_lists)],
+						ephemeral: true,
+						components: [row],
+					});
 					return;
 			}
 
 			let channelNames = '';
 			// deleteChannels.shift();
-			deleteChannels.forEach(currentChannel => {
+			deleteChannels.forEach((currentChannel) => {
 				channelNames += currentChannel.name + '\n';
 			});
 			deleteSelectedChannels(deleteChannels);
 
-			await interaction.reply({ embeds: [embed.info("Deleted", channelNames + 'を削除しました')], ephemeral: true });
+			await interaction.reply({
+				embeds: [
+					embed.info('Deleted', channelNames + 'を削除しました'),
+				],
+				ephemeral: true,
+			});
 		}
-	}
-}
+	},
+};
 
 function getConnectingVoiceChannel(interaction) {
 	const channel_id = interaction.member.voice.channelId;
-	if (!channel_id)
-		return;
-	return interaction.member.guild.channels.cache.find((channel) => channel.id === channel_id);
+	if (!channel_id) return;
+	return interaction.member.guild.channels.cache.find(
+		(channel) => channel.id === channel_id,
+	);
 }
 
 async function deleteSelectedChannels(deleteChannels) {
-	for (channel of deleteChannels)
-		await channel.delete();
+	for (channel of deleteChannels) await channel.delete();
 }
