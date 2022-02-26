@@ -1,4 +1,4 @@
-const vals = require("../choices.js");
+const vals = require('../choices.js');
 const send = require('../send.js');
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
 					{
 						name: 'minishell',
 						value: 'minishell',
-					}
+					},
 				],
 			},
 			{
@@ -41,8 +41,8 @@ module.exports = {
 				description: 'creating voice channel for somebody else',
 				type: 'USER',
 				required: false,
-			}
-		]
+			},
+		],
 	},
 	async execute(interaction) {
 		if (interaction.commandName == 'review') {
@@ -50,21 +50,28 @@ module.exports = {
 			const channelName = createChannelName(interaction);
 
 			if (channelExist(guild, channelName)) {
-				await send.reply(interaction, send.msgs["Duplicate"], channelName);
+				await send.reply(
+					interaction,
+					send.msgs['Duplicate'],
+					channelName,
+				);
 				return;
 			}
 
-			const category = guild.channels.cache.find((channel) => channel.name === '📝 Project Review');
+			const category = guild.channels.cache.find(
+				channel => channel.name === '📝 Project Review',
+			);
 			await category.createChannel(channelName, { type: 'GUILD_VOICE' });
-			await send.reply(interaction, send.msgs["Created"], channelName);
+			await send.reply(interaction, send.msgs['Created'], channelName);
 		}
-	}
-}
+	},
+};
 
 function channelExist(guild, channelName) {
-	const channel = guild.channels.cache.find((channel) => channel.name === channelName);
-	if (channel)
-		return true;
+	const channel = guild.channels.cache.find(
+		channel => channel.name === channelName,
+	);
+	if (channel) return true;
 	return false;
 }
 
@@ -96,8 +103,7 @@ function getTime(interaction) {
 	const hour = interaction.options.getInteger('hour');
 	let min = interaction.options.getInteger('min');
 
-	if (min == 0)
-		min = '0' + min;
+	if (min == 0) min = '0' + min;
 
 	return hour + ':' + min + '~';
 }
