@@ -111,13 +111,7 @@ module.exports = {
 				channelNames += currentChannel.name + '\n';
 			});
 			deleteSelectedChannels(deleteChannels);
-
-			await interaction.reply({
-				embeds: [
-					embed.info('Deleted', channelNames + 'を削除しました'),
-				],
-				ephemeral: true,
-			});
+			await send.reply(interaction, send.msgs['Deleted'], channelNames);
 		}
 	},
 };

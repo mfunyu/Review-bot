@@ -35,7 +35,7 @@ function set_msg_content(msg, params) {
 	if (msg == exports.msgs['Choose'])
 		return `以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n${params}`;
 	if (msg == exports.msgs['Deleted'])
-		return `レビューチャンネル ${params} を削除しました`;
+		return `レビューチャンネル\n ${wrapCodeBlock(params)} を削除しました`;
 	if (msg == exports.msgs['DeteleAgain'])
 		return `レビューチャンネル ${wrapCodeBlock(
 			params
