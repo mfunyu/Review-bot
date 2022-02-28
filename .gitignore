@@ -1,0 +1,8 @@
+*
+!commands/
+!*.py
+!Procfile
+!*.txt
+!*.js
+!.gitignore
+!.prettierrc.js
