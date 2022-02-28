@@ -13,9 +13,9 @@ module.exports = {
 				required: true,
 				default: 'one',
 				choices: [
+					{ name: 'choose', value: 'choose' },
 					{ name: 'all', value: 'all' },
 					{ name: 'current', value: 'current' },
-					{ name: 'choose', value: 'choose' },
 				],
 			},
 		],
@@ -28,7 +28,7 @@ module.exports = {
 
 			const selection = interaction.options.getString('selection');
 			const category = guild.channels.cache.find(
-				(channel) => channel.name === '📝 Project Review',
+				channel => channel.name === '📝 Project Review'
 			);
 
 			const channels = category.children;
@@ -38,7 +38,7 @@ module.exports = {
 			switch (selection) {
 				case 'all':
 					let found = false;
-					channels.forEach((currentChannel) => {
+					channels.forEach(currentChannel => {
 						if (
 							currentChannel.name.includes('/' + userName + '/')
 						) {
@@ -68,16 +68,11 @@ module.exports = {
 					let msg_lists = '';
 					let index = 0;
 					const row = new Discord.MessageActionRow();
-					channels.forEach((currentChannel) => {
+					channels.forEach(currentChannel => {
 						if (
 							currentChannel.name.includes('/' + userName + '/')
 						) {
-							msg_lists +=
-								':' +
-								dict[index] +
-								':   ' +
-								currentChannel.name +
-								'\n';
+							msg_lists += `\n:${dict[index]}:  \`${currentChannel.name}\``;
 							row.addComponents(
 								new Discord.MessageButton()
 									.setCustomId(currentChannel.name)
@@ -95,32 +90,40 @@ module.exports = {
 						);
 						return;
 					}
+					msg_lists += '\n';
 					await send.reply(
 						interaction,
 						send.msgs['Choose'],
 						msg_lists,
 						row
 					);
-
 					return;
 			}
 
-			let channelNames = '';
-			// deleteChannels.shift();
-			deleteChannels.forEach((currentChannel) => {
-				channelNames += currentChannel.name + '\n';
-			});
+			const channelNames = formatChannelNames(deleteChannels);
 			deleteSelectedChannels(deleteChannels);
 			await send.reply(interaction, send.msgs['Deleted'], channelNames);
 		}
 	},
 };
 
+function formatChannelNames(deleteChannels) {
+	if (deleteChannels.length == 1) {
+		return deleteChannels[0].name;
+	}
+
+	let channelNames = '\n';
+	deleteChannels.forEach(currentChannel => {
+		channelNames += `${currentChannel.name}\n`;
+	});
+	return channelNames;
+}
+
 function getConnectingVoiceChannel(interaction) {
 	const channel_id = interaction.member.voice.channelId;
 	if (!channel_id) return;
 	return interaction.member.guild.channels.cache.find(
-		(channel) => channel.id === channel_id,
+		channel => channel.id === channel_id
 	);
 }
 

@@ -1,7 +1,8 @@
 const embed = require('./embed.js');
 
 function wrapCodeBlock(string) {
-	return '`' + string + '`';
+	if (string.startsWith('\n')) return `\n\`${string.substring(1)}\``;
+	return `\`${string}\``;
 }
 
 var Type = {
@@ -35,7 +36,7 @@ function set_msg_content(msg, params) {
 	if (msg == exports.msgs['Choose'])
 		return `以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n${params}`;
 	if (msg == exports.msgs['Deleted'])
-		return `レビューチャンネル\n ${wrapCodeBlock(params)} を削除しました`;
+		return `レビューチャンネル ${wrapCodeBlock(params)} を削除しました`;
 	if (msg == exports.msgs['DeteleAgain'])
 		return `レビューチャンネル ${wrapCodeBlock(
 			params
