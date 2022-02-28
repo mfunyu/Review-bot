@@ -6,7 +6,9 @@ const onclick = require('./onclick.js');
 
 dotenv.config();
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES],
+});
 
 const commands = {};
 const commandFiles = fs
