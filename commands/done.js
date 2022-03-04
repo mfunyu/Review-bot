@@ -36,15 +36,14 @@ module.exports = {
 
 			switch (selection) {
 				case 'all':
-					if (deleteAll(interaction, channels, deleteChannels) == -1)
+					if (doneAll(interaction, channels, deleteChannels) == -1)
 						return;
 					break;
 				case 'current':
-					if (deleteCurrent(interaction, deleteChannels) == -1)
-						return;
+					if (doneCurrent(interaction, deleteChannels) == -1) return;
 					break;
 				case 'choose':
-					deleteChoose();
+					doneChoose();
 			}
 
 			const channelNames = formatChannelNames(deleteChannels);
@@ -54,7 +53,7 @@ module.exports = {
 	},
 };
 
-async function deleteChoose(interaction, deleteChannels) {
+async function doneChoose(interaction, deleteChannels) {
 	var dict = ['zero', 'one', 'two', 'three', 'four'];
 	let msg_lists = '';
 	let index = 0;
@@ -80,7 +79,7 @@ async function deleteChoose(interaction, deleteChannels) {
 	return;
 }
 
-async function deleteCurrent(interaction, deleteChannels) {
+async function doneCurrent(interaction, deleteChannels) {
 	const ch = getConnectingVoiceChannel(interaction);
 	if (!ch) {
 		await send.reply(interaction, send.msgs['NotInVC']);
@@ -90,7 +89,7 @@ async function deleteCurrent(interaction, deleteChannels) {
 	return 0;
 }
 
-async function deleteAll(interaction, channels, deleteChannels) {
+async function doneAll(interaction, channels, deleteChannels) {
 	const userName = interaction.member.displayName;
 	let found = false;
 
