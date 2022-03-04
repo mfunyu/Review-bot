@@ -1,4 +1,5 @@
 const embed = require('../embed.js');
+const send = require('../send.js');
 
 module.exports = {
 	data: {
@@ -12,9 +13,9 @@ module.exports = {
 				required: true,
 				default: 'one',
 				choices: [
+					{ name: 'choose', value: 'choose' },
 					{ name: 'all', value: 'all' },
 					{ name: 'current', value: 'current' },
-					{ name: 'choose', value: 'choose' },
 				],
 			},
 		],
@@ -27,7 +28,7 @@ module.exports = {
 
 			const selection = interaction.options.getString('selection');
 			const category = guild.channels.cache.find(
-				(channel) => channel.name === '📝 Project Review',
+				channel => channel.name === '📝 Project Review'
 			);
 
 			const channels = category.children;
@@ -37,7 +38,7 @@ module.exports = {
 			switch (selection) {
 				case 'all':
 					let found = false;
-					channels.forEach((currentChannel) => {
+					channels.forEach(currentChannel => {
 						if (
 							currentChannel.name.includes('/' + userName + '/')
 						) {
@@ -46,23 +47,18 @@ module.exports = {
 						}
 					});
 					if (!found) {
-						const msg =
-							userName + 'を含むボイスチャンネルがありません';
-						await interaction.reply({
-							embeds: [embed.notfound(msg)],
-							ephemeral: true,
-						});
+						await send.reply(
+							interaction,
+							send.msgs['NotFound'],
+							userName
+						);
 						return;
 					}
 					break;
 				case 'current':
 					ch = getConnectingVoiceChannel(interaction);
 					if (!ch) {
-						const msg = '入室中のボイスチャンネルがありません';
-						await interaction.reply({
-							embeds: [embed.notfound(msg)],
-							ephemeral: true,
-						});
+						await send.reply(interaction, send.msgs['NotInVC']);
 						return;
 					}
 					deleteChannels.push(ch);
@@ -72,69 +68,62 @@ module.exports = {
 					let msg_lists = '';
 					let index = 0;
 					const row = new Discord.MessageActionRow();
-					channels.forEach((currentChannel) => {
+					channels.forEach(currentChannel => {
 						if (
 							currentChannel.name.includes('/' + userName + '/')
 						) {
-							msg_lists +=
-								':' +
-								dict[index] +
-								':   ' +
-								currentChannel.name +
-								'\n';
+							msg_lists += `\n:${dict[index]}:  \`${currentChannel.name}\``;
 							row.addComponents(
 								new Discord.MessageButton()
 									.setCustomId(currentChannel.name)
 									.setLabel(index.toString())
-									.setStyle('PRIMARY'),
+									.setStyle('PRIMARY')
 							);
 							index++;
 						}
 					});
 					if (!msg_lists) {
-						const msg =
-							'`' +
-							userName +
-							'`を含むボイスチャンネルがありません';
-						await interaction.reply({
-							embeds: [embed.notfound(msg)],
-							ephemeral: true,
-						});
+						await send.reply(
+							interaction,
+							send.msgs['NotFound'],
+							userName
+						);
 						return;
 					}
-					const msg =
-						'以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n' +
-						msg_lists;
-					await interaction.reply({
-						embeds: [embed.info('Choose', msg, msg_lists)],
-						ephemeral: true,
-						components: [row],
-					});
+					msg_lists += '\n';
+					await send.reply(
+						interaction,
+						send.msgs['Choose'],
+						msg_lists,
+						row
+					);
 					return;
 			}
 
-			let channelNames = '';
-			// deleteChannels.shift();
-			deleteChannels.forEach((currentChannel) => {
-				channelNames += currentChannel.name + '\n';
-			});
+			const channelNames = formatChannelNames(deleteChannels);
 			deleteSelectedChannels(deleteChannels);
-
-			await interaction.reply({
-				embeds: [
-					embed.info('Deleted', channelNames + 'を削除しました'),
-				],
-				ephemeral: true,
-			});
+			await send.reply(interaction, send.msgs['Deleted'], channelNames);
 		}
 	},
 };
+
+function formatChannelNames(deleteChannels) {
+	if (deleteChannels.length == 1) {
+		return deleteChannels[0].name;
+	}
+
+	let channelNames = '\n';
+	deleteChannels.forEach(currentChannel => {
+		channelNames += `${currentChannel.name}\n`;
+	});
+	return channelNames;
+}
 
 function getConnectingVoiceChannel(interaction) {
 	const channel_id = interaction.member.voice.channelId;
 	if (!channel_id) return;
 	return interaction.member.guild.channels.cache.find(
-		(channel) => channel.id === channel_id,
+		channel => channel.id === channel_id
 	);
 }
 
