@@ -24,8 +24,6 @@ module.exports = {
 		if (interaction.commandName == 'done') {
 			const guild = interaction.member.guild;
 
-			const userName = interaction.member.displayName;
-
 			const selection = interaction.options.getString('selection');
 			const category = guild.channels.cache.find(
 				channel => channel.name === '📝 Project Review'
@@ -34,16 +32,23 @@ module.exports = {
 			const channels = category.children;
 			const deleteChannels = [];
 
+			let ret;
 			switch (selection) {
 				case 'all':
-					if (doneAll(interaction, channels, deleteChannels) == -1)
-						return;
+					ret = await deleteAll(
+						interaction,
+						channels,
+						deleteChannels
+					);
+					if (ret == -1) return;
 					break;
 				case 'current':
-					if (doneCurrent(interaction, deleteChannels) == -1) return;
+					ret = await deleteCurrent(interaction, deleteChannels);
+					if (ret == -1) return;
 					break;
 				case 'choose':
-					doneChoose();
+					deleteChoose(Discord, interaction, channels);
+					return;
 			}
 
 			const channelNames = formatChannelNames(deleteChannels);
@@ -53,7 +58,8 @@ module.exports = {
 	},
 };
 
-async function doneChoose(interaction, deleteChannels) {
+async function deleteChoose(Discord, interaction, channels) {
+	const userName = interaction.member.displayName;
 	var dict = ['zero', 'one', 'two', 'three', 'four'];
 	let msg_lists = '';
 	let index = 0;
