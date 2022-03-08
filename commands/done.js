@@ -79,15 +79,14 @@ async function deleteChoose(Discord, interaction, channels) {
 		'regional_indicator_f',
 	];
 	let msg_lists = '';
-	let button_nbr = 1;
+	let button_nbr = 0;
 
 	const row = [new Discord.MessageActionRow()];
 	let row_index = 0;
 	channels.forEach(currentChannel => {
-		if (
-			currentChannel.name.includes('/' + userName + '/') &&
-			button_nbr < 16
-		) {
+		if (currentChannel.name.includes('/' + userName + '/')) {
+			button_nbr++;
+			if (button_nbr > 15) return;
 			if (button_nbr != 1 && button_nbr % 5 == 1) {
 				row_index = (button_nbr / 5) | 0;
 				row.push(new Discord.MessageActionRow());
@@ -100,12 +99,16 @@ async function deleteChoose(Discord, interaction, channels) {
 					.setLabel(button_nbr.toString(16).toUpperCase())
 					.setStyle('PRIMARY')
 			);
-			button_nbr++;
 		}
 	});
 	if (!msg_lists) {
 		await send.reply(interaction, send.msgs['NotFound'], userName);
 		return;
+	}
+	if (button_nbr > 15) {
+		msg_lists += `\nその他、計\`${(
+			button_nbr - 15
+		).toString()}\`チャンネルが存在しています`;
 	}
 	msg_lists += '\n';
 	await send.reply(interaction, send.msgs['Choose'], msg_lists, row);
