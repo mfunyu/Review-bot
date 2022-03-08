@@ -28,7 +28,6 @@ module.exports = {
 			const category = guild.channels.cache.find(
 				channel => channel.name === '📝 Project Review'
 			);
-
 			const channels = category.children;
 			const deleteChannels = [];
 
@@ -39,7 +38,11 @@ module.exports = {
 					if (ret == -1) return;
 					break;
 				case 'current':
-					ret = await doneCurrent(interaction, deleteChannels);
+					ret = await doneCurrent(
+						interaction,
+						category,
+						deleteChannels
+					);
 					if (ret == -1) return;
 					break;
 				case 'choose':
@@ -96,10 +99,14 @@ function createButtonRow(Discord, vc_lists) {
 	return row;
 }
 
-async function doneCurrent(interaction, deleteChannels) {
+async function doneCurrent(interaction, category, deleteChannels) {
 	const ch = getConnectingVoiceChannel(interaction);
 	if (!ch) {
 		await send.reply(interaction, send.msgs['NotInVC']);
+		return -1;
+	}
+	if (ch.parentId != category.id) {
+		await send.reply(interaction, send.msgs['NotInCategory']);
 		return -1;
 	}
 	deleteChannels.push(ch);

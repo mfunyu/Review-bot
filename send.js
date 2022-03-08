@@ -14,6 +14,7 @@ exports.msgs = {
 	Duplicate: { type: Type.warning, emoji: ':warning:', title: 'Duplicate' },
 	NotFound: { type: Type.warning, emoji: ':warning:', title: 'Not Found' },
 	NotInVC: { type: Type.warning, emoji: ':mute:', title: 'Not In VC' },
+	NotInCategory: { type: Type.warning, emoji: ':mute:', title: 'Not In VC' },
 	DeteleAgain: { type: Type.warning, emoji: ':warning:', title: 'Not Found' },
 	Created: { type: Type.info, emoji: ':loud_sound:', title: 'Created' },
 	Choose: { type: Type.info, emoji: ':notepad_spiral:', title: 'Choose' },
@@ -70,6 +71,8 @@ function set_msg_content(msg, params) {
 		)} を含むボイスチャンネルが見つかりません`;
 	if (msg == exports.msgs['NotInVC'])
 		return '入室中のボイスチャンネルがありません';
+	if (msg == exports.msgs['NotInCategory'])
+		return '入室中のボイスチャンネルがレビューチャンネルではありません';
 	if (msg == exports.msgs['Created'])
 		return `レビューチャンネル ${wrapCodeBlock(params)} を作成しました`;
 	if (msg == exports.msgs['Choose'])
