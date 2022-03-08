@@ -60,20 +60,47 @@ module.exports = {
 
 async function deleteChoose(Discord, interaction, channels) {
 	const userName = interaction.member.displayName;
-	var dict = ['zero', 'one', 'two', 'three', 'four'];
+	var dict = [
+		'zero',
+		'one',
+		'two',
+		'three',
+		'four',
+		'five',
+		'six',
+		'seven',
+		'eight',
+		'nine',
+		'regional_indicator_a',
+		'regional_indicator_b',
+		'regional_indicator_c',
+		'regional_indicator_d',
+		'regional_indicator_e',
+		'regional_indicator_f',
+	];
 	let msg_lists = '';
-	let index = 0;
-	const row = new Discord.MessageActionRow();
+	let button_nbr = 1;
+
+	const row = [new Discord.MessageActionRow()];
+	let row_index = 0;
 	channels.forEach(currentChannel => {
-		if (currentChannel.name.includes('/' + userName + '/')) {
-			msg_lists += `\n:${dict[index]}:  \`${currentChannel.name}\``;
-			row.addComponents(
+		if (
+			currentChannel.name.includes('/' + userName + '/') &&
+			button_nbr < 16
+		) {
+			if (button_nbr != 1 && button_nbr % 5 == 1) {
+				row_index = (button_nbr / 5) | 0;
+				row.push(new Discord.MessageActionRow());
+				msg_lists += '\n';
+			}
+			msg_lists += `\n:${dict[button_nbr]}:  \`${currentChannel.name}\``;
+			row[row_index].addComponents(
 				new Discord.MessageButton()
 					.setCustomId(currentChannel.name)
-					.setLabel(index.toString())
+					.setLabel(button_nbr.toString(16).toUpperCase())
 					.setStyle('PRIMARY')
 			);
-			index++;
+			button_nbr++;
 		}
 	});
 	if (!msg_lists) {

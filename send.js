@@ -57,7 +57,7 @@ exports.reply = async function (interaction, msg, params, row) {
 		await interaction.reply({
 			embeds: [content],
 			ephemeral: true,
-			components: [row],
+			components: row,
 		});
 	else
 		await interaction.reply({
