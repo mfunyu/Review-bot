@@ -35,19 +35,15 @@ module.exports = {
 			let ret;
 			switch (selection) {
 				case 'all':
-					ret = await deleteAll(
-						interaction,
-						channels,
-						deleteChannels
-					);
+					ret = await doneAll(interaction, channels, deleteChannels);
 					if (ret == -1) return;
 					break;
 				case 'current':
-					ret = await deleteCurrent(interaction, deleteChannels);
+					ret = await doneCurrent(interaction, deleteChannels);
 					if (ret == -1) return;
 					break;
 				case 'choose':
-					deleteChoose(Discord, interaction, channels);
+					doneChoose(Discord, interaction, channels);
 					return;
 			}
 
@@ -58,7 +54,7 @@ module.exports = {
 	},
 };
 
-async function deleteChoose(Discord, interaction, channels) {
+async function doneChoose(Discord, interaction, channels) {
 	const userName = interaction.member.displayName;
 	var dict = [
 		'zero',
