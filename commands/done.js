@@ -66,12 +66,12 @@ async function doneChoose(Discord, interaction, channels) {
 	channels.forEach(currentChannel => {
 		if (currentChannel.name.includes('/' + userName + '/')) {
 			button_nbr++;
+			vc_lists.push(currentChannel.name);
 			if (button_nbr > VC_LIMIT) return;
 			if (button_nbr != 1 && button_nbr % MAX_ROW_MEMBERS == 1) {
 				row_index = (button_nbr / MAX_ROW_MEMBERS) | 0;
 				row.push(new Discord.MessageActionRow());
 			}
-			vc_lists.push(currentChannel.name);
 			row[row_index].addComponents(
 				new Discord.MessageButton()
 					.setCustomId(currentChannel.name)
@@ -84,12 +84,12 @@ async function doneChoose(Discord, interaction, channels) {
 		await send.reply(interaction, send.msgs['NotFound'], userName);
 		return;
 	}
-	const msg_content = createMessageContent(vc_lists, button_nbr);
+	const msg_content = createMessageContent(vc_lists);
 	await send.reply(interaction, send.msgs['Choose'], msg_content, row);
 	return;
 }
 
-function createMessageContent(vc_lists, channel_cnt) {
+function createMessageContent(vc_lists) {
 	const dict = [
 		'zero',
 		'one',
@@ -115,12 +115,13 @@ function createMessageContent(vc_lists, channel_cnt) {
 
 	vc_lists.forEach(channel_name => {
 		if (index % 5 == 0) msg += '\n';
-		msg += `:${dict[index + 1]}:  \`${channel_name}\`\n`;
 		index++;
+		if (index > VC_LIMIT) return;
+		msg += `:${dict[index]}:  \`${channel_name}\`\n`;
 	});
 
-	if (channel_cnt > VC_LIMIT) {
-		const rest_channels = channel_cnt - VC_LIMIT;
+	if (index > VC_LIMIT) {
+		const rest_channels = index - VC_LIMIT;
 		msg += `その他、計\`${rest_channels.toString()}\`チャンネルが存在しています\n`;
 	}
 	return msg;
