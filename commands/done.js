@@ -56,28 +56,11 @@ module.exports = {
 
 async function doneChoose(Discord, interaction, channels) {
 	const userName = interaction.member.displayName;
-	const VC_LIMIT = 15;
-	const MAX_ROW_MEMBERS = 5;
 	let vc_lists = [];
-	let button_nbr = 0;
 
-	const row = [new Discord.MessageActionRow()];
-	let row_index = 0;
 	channels.forEach(currentChannel => {
 		if (currentChannel.name.includes('/' + userName + '/')) {
-			button_nbr++;
 			vc_lists.push(currentChannel.name);
-			if (button_nbr > VC_LIMIT) return;
-			if (button_nbr != 1 && button_nbr % MAX_ROW_MEMBERS == 1) {
-				row_index = (button_nbr / MAX_ROW_MEMBERS) | 0;
-				row.push(new Discord.MessageActionRow());
-			}
-			row[row_index].addComponents(
-				new Discord.MessageButton()
-					.setCustomId(currentChannel.name)
-					.setLabel(button_nbr.toString(16).toUpperCase())
-					.setStyle('PRIMARY')
-			);
 		}
 	});
 	if (!vc_lists) {
@@ -85,8 +68,33 @@ async function doneChoose(Discord, interaction, channels) {
 		return;
 	}
 	const msg_content = createMessageContent(vc_lists);
+	const row = createButtonRow(Discord, vc_lists);
 	await send.reply(interaction, send.msgs['Choose'], msg_content, row);
 	return;
+}
+
+function createButtonRow(Discord, vc_lists) {
+	const VC_LIMIT = 15;
+	const MAX_ROW_MEMBERS = 5;
+	const row = [];
+
+	let row_index = -1;
+	let index = 0;
+	vc_lists.forEach(channel_name => {
+		if (index >= VC_LIMIT) return;
+		if (index % MAX_ROW_MEMBERS == 0) {
+			row.push(new Discord.MessageActionRow());
+			row_index++;
+		}
+		row[row_index].addComponents(
+			new Discord.MessageButton()
+				.setCustomId(channel_name)
+				.setLabel((index + 1).toString(16).toUpperCase())
+				.setStyle('PRIMARY')
+		);
+		index++;
+	});
+	return row;
 }
 
 function createMessageContent(vc_lists) {
