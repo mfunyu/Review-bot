@@ -56,6 +56,40 @@ module.exports = {
 
 async function doneChoose(Discord, interaction, channels) {
 	const userName = interaction.member.displayName;
+	const VC_LIMIT = 15;
+	const MAX_ROW_MEMBERS = 5;
+	let vc_lists = [];
+	let button_nbr = 0;
+
+	const row = [new Discord.MessageActionRow()];
+	let row_index = 0;
+	channels.forEach(currentChannel => {
+		if (currentChannel.name.includes('/' + userName + '/')) {
+			button_nbr++;
+			if (button_nbr > VC_LIMIT) return;
+			if (button_nbr != 1 && button_nbr % MAX_ROW_MEMBERS == 1) {
+				row_index = (button_nbr / MAX_ROW_MEMBERS) | 0;
+				row.push(new Discord.MessageActionRow());
+			}
+			vc_lists.push(currentChannel.name);
+			row[row_index].addComponents(
+				new Discord.MessageButton()
+					.setCustomId(currentChannel.name)
+					.setLabel(button_nbr.toString(16).toUpperCase())
+					.setStyle('PRIMARY')
+			);
+		}
+	});
+	if (!vc_lists) {
+		await send.reply(interaction, send.msgs['NotFound'], userName);
+		return;
+	}
+	const msg_content = createMessageContent(vc_lists, button_nbr);
+	await send.reply(interaction, send.msgs['Choose'], msg_content, row);
+	return;
+}
+
+function createMessageContent(vc_lists, channel_cnt) {
 	const dict = [
 		'zero',
 		'one',
@@ -75,42 +109,21 @@ async function doneChoose(Discord, interaction, channels) {
 		'regional_indicator_f',
 	];
 	const VC_LIMIT = 15;
-	const MAX_ROW_MEMBERS = 5;
-	let msg_lists = '';
-	let button_nbr = 0;
 
-	const row = [new Discord.MessageActionRow()];
-	let row_index = 0;
-	channels.forEach(currentChannel => {
-		if (currentChannel.name.includes('/' + userName + '/')) {
-			button_nbr++;
-			if (button_nbr > VC_LIMIT) return;
-			if (button_nbr != 1 && button_nbr % MAX_ROW_MEMBERS == 1) {
-				row_index = (button_nbr / MAX_ROW_MEMBERS) | 0;
-				row.push(new Discord.MessageActionRow());
-				msg_lists += '\n';
-			}
-			msg_lists += `\n:${dict[button_nbr]}:  \`${currentChannel.name}\``;
-			row[row_index].addComponents(
-				new Discord.MessageButton()
-					.setCustomId(currentChannel.name)
-					.setLabel(button_nbr.toString(16).toUpperCase())
-					.setStyle('PRIMARY')
-			);
-		}
+	let msg = '';
+	let index = 0;
+
+	vc_lists.forEach(channel_name => {
+		if (index % 5 == 0) msg += '\n';
+		msg += `:${dict[index + 1]}:  \`${channel_name}\`\n`;
+		index++;
 	});
-	if (!msg_lists) {
-		await send.reply(interaction, send.msgs['NotFound'], userName);
-		return;
+
+	if (channel_cnt > VC_LIMIT) {
+		const rest_channels = channel_cnt - VC_LIMIT;
+		msg += `その他、計\`${rest_channels.toString()}\`チャンネルが存在しています\n`;
 	}
-	if (button_nbr > VC_LIMIT) {
-		msg_lists += `\nその他、計\`${(
-			button_nbr - VC_LIMIT
-		).toString()}\`チャンネルが存在しています`;
-	}
-	msg_lists += '\n';
-	await send.reply(interaction, send.msgs['Choose'], msg_lists, row);
-	return;
+	return msg;
 }
 
 async function doneCurrent(interaction, deleteChannels) {
