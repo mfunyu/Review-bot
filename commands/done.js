@@ -67,9 +67,8 @@ async function doneChoose(Discord, interaction, channels) {
 		await send.reply(interaction, send.msgs['NotFound'], userName);
 		return;
 	}
-	const msg_content = createMessageContent(vc_lists);
 	const row = createButtonRow(Discord, vc_lists);
-	await send.reply(interaction, send.msgs['Choose'], msg_content, row);
+	await send.reply(interaction, send.msgs['Choose'], vc_lists, row);
 	return;
 }
 
@@ -95,44 +94,6 @@ function createButtonRow(Discord, vc_lists) {
 		index++;
 	});
 	return row;
-}
-
-function createMessageContent(vc_lists) {
-	const dict = [
-		'zero',
-		'one',
-		'two',
-		'three',
-		'four',
-		'five',
-		'six',
-		'seven',
-		'eight',
-		'nine',
-		'regional_indicator_a',
-		'regional_indicator_b',
-		'regional_indicator_c',
-		'regional_indicator_d',
-		'regional_indicator_e',
-		'regional_indicator_f',
-	];
-	const VC_LIMIT = 15;
-
-	let msg = '';
-	let index = 0;
-
-	vc_lists.forEach(channel_name => {
-		if (index % 5 == 0) msg += '\n';
-		index++;
-		if (index > VC_LIMIT) return;
-		msg += `:${dict[index]}:  \`${channel_name}\`\n`;
-	});
-
-	if (index > VC_LIMIT) {
-		const rest_channels = index - VC_LIMIT;
-		msg += `その他、計\`${rest_channels.toString()}\`チャンネルが存在しています\n`;
-	}
-	return msg;
 }
 
 async function doneCurrent(interaction, deleteChannels) {

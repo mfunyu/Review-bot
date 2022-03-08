@@ -20,6 +20,45 @@ exports.msgs = {
 	Deleted: { type: Type.info, emoji: ':wastebasket:', title: 'Deteled' },
 };
 
+function createChooseMessageContent(vc_lists) {
+	const dict = [
+		'zero',
+		'one',
+		'two',
+		'three',
+		'four',
+		'five',
+		'six',
+		'seven',
+		'eight',
+		'nine',
+		'regional_indicator_a',
+		'regional_indicator_b',
+		'regional_indicator_c',
+		'regional_indicator_d',
+		'regional_indicator_e',
+		'regional_indicator_f',
+	];
+	const VC_LIMIT = 15;
+
+	let msg = '';
+	let index = 0;
+
+	vc_lists.forEach(channel_name => {
+		if (index % 5 == 0) msg += '\n';
+		index++;
+		if (index > VC_LIMIT) return;
+		msg += `:${dict[index]}:  ${wrapCodeBlock(channel_name)}\n`;
+	});
+
+	if (index > VC_LIMIT) {
+		const rest_channels = index - VC_LIMIT;
+		msg += `その他、計${wrapCodeBlock(rest_channels.toString())}\
+		チャンネルが存在しています\n`;
+	}
+	return msg;
+}
+
 function set_msg_content(msg, params) {
 	if (msg == exports.msgs['Duplicate'])
 		return `レビューチャンネル ${wrapCodeBlock(
@@ -34,13 +73,13 @@ function set_msg_content(msg, params) {
 	if (msg == exports.msgs['Created'])
 		return `レビューチャンネル ${wrapCodeBlock(params)} を作成しました`;
 	if (msg == exports.msgs['Choose'])
-		return `以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n${params}`;
+		return `以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n\
+		${createChooseMessageContent(params)}`;
 	if (msg == exports.msgs['Deleted'])
 		return `レビューチャンネル ${wrapCodeBlock(params)} を削除しました`;
 	if (msg == exports.msgs['DeteleAgain'])
-		return `レビューチャンネル ${wrapCodeBlock(
-			params
-		)} はすでに削除されています`;
+		return `レビューチャンネル ${wrapCodeBlock(params)} \
+		はすでに削除されています`;
 }
 
 exports.reply = async function (interaction, msg, params, row) {
