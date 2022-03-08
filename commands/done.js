@@ -56,7 +56,7 @@ module.exports = {
 
 async function doneChoose(Discord, interaction, channels) {
 	const userName = interaction.member.displayName;
-	var dict = [
+	const dict = [
 		'zero',
 		'one',
 		'two',
@@ -74,6 +74,8 @@ async function doneChoose(Discord, interaction, channels) {
 		'regional_indicator_e',
 		'regional_indicator_f',
 	];
+	const VC_LIMIT = 15;
+	const MAX_ROW_MEMBERS = 5;
 	let msg_lists = '';
 	let button_nbr = 0;
 
@@ -82,9 +84,9 @@ async function doneChoose(Discord, interaction, channels) {
 	channels.forEach(currentChannel => {
 		if (currentChannel.name.includes('/' + userName + '/')) {
 			button_nbr++;
-			if (button_nbr > 15) return;
-			if (button_nbr != 1 && button_nbr % 5 == 1) {
-				row_index = (button_nbr / 5) | 0;
+			if (button_nbr > VC_LIMIT) return;
+			if (button_nbr != 1 && button_nbr % MAX_ROW_MEMBERS == 1) {
+				row_index = (button_nbr / MAX_ROW_MEMBERS) | 0;
 				row.push(new Discord.MessageActionRow());
 				msg_lists += '\n';
 			}
@@ -101,9 +103,9 @@ async function doneChoose(Discord, interaction, channels) {
 		await send.reply(interaction, send.msgs['NotFound'], userName);
 		return;
 	}
-	if (button_nbr > 15) {
+	if (button_nbr > VC_LIMIT) {
 		msg_lists += `\nその他、計\`${(
-			button_nbr - 15
+			button_nbr - VC_LIMIT
 		).toString()}\`チャンネルが存在しています`;
 	}
 	msg_lists += '\n';
