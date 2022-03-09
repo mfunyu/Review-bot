@@ -1,0 +1,28 @@
+{
+	"devDependencies": {
+		"@types/dotenv": "^8.2.0",
+		"@types/node": "^17.0.10"
+	},
+	"dependencies": {
+		"discord.js": "^13.6.0",
+		"discord.js-buttons": "^1.0.0",
+		"dotenv": "^16.0.0"
+	},
+	"name": "review-bot",
+	"description": "## Botの概要",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"start": "node ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/42Tokyo/Review-bot.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/42Tokyo/Review-bot/issues"
+	},
+	"homepage": "https://github.com/42Tokyo/Review-bot#readme"
+}
