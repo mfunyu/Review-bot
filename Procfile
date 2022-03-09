@@ -1,1 +1,1 @@
-discordbot: python3 reviewbot.py
+web: npm start
