@@ -66,7 +66,7 @@ async function doneChoose(Discord, interaction, channels) {
 			vc_lists.push(currentChannel.name);
 		}
 	});
-	if (!vc_lists) {
+	if (!vc_lists.length) {
 		await send.reply(interaction, send.msgs['NotFound'], userName);
 		return;
 	}
