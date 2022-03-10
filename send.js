@@ -95,7 +95,7 @@ exports.reply = async function (interaction, msg, params, row) {
 	else if (msg.type == Type.info)
 		content = embed.info(msg_title, set_msg_content(msg, params));
 	else if (msg.type == Type.help) {
-		content = embed.help(msg_title);
+		content = embed.help(msg_title, params);
 	}
 
 	if (row)
