@@ -11,16 +11,6 @@ module.exports = {
 				name: 'project_name',
 				description: 'name of the reviewing project',
 				required: true,
-				choices: [
-					{
-						name: 'libft',
-						value: 'libft',
-					},
-					{
-						name: 'minishell',
-						value: 'minishell',
-					},
-				],
 			},
 			{
 				name: 'hour',
