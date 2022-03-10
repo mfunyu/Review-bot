@@ -8,6 +8,7 @@ function wrapCodeBlock(string) {
 var Type = {
 	info: 0,
 	warning: 1,
+	help: 2,
 };
 
 exports.msgs = {
@@ -19,6 +20,7 @@ exports.msgs = {
 	Created: { type: Type.info, emoji: ':loud_sound:', title: 'Created' },
 	Choose: { type: Type.info, emoji: ':notepad_spiral:', title: 'Choose' },
 	Deleted: { type: Type.info, emoji: ':wastebasket:', title: 'Deteled' },
+	Help: { type: Type.help, emoji: ':mega:', title: 'Help' },
 };
 
 function createChooseMessageContent(vc_lists) {
@@ -87,13 +89,14 @@ function set_msg_content(msg, params) {
 
 exports.reply = async function (interaction, msg, params, row) {
 	const msg_title = `${msg.emoji}  ${msg.title}`;
-	const msg_content = set_msg_content(msg, params);
 
-	let content;
 	if (msg.type == Type.warning)
-		content = embed.warning(msg_title, msg_content);
+		content = embed.warning(msg_title, set_msg_content(msg, params));
 	else if (msg.type == Type.info)
-		content = embed.info(msg_title, msg_content);
+		content = embed.info(msg_title, set_msg_content(msg, params));
+	else if (msg.type == Type.help) {
+		content = embed.help(msg_title);
+	}
 
 	if (row)
 		await interaction.reply({
