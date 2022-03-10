@@ -53,13 +53,13 @@ module.exports = {
 				await send.reply(
 					interaction,
 					send.msgs['Duplicate'],
-					channelName,
+					channelName
 				);
 				return;
 			}
 
 			const category = guild.channels.cache.find(
-				channel => channel.name === '📝 Project Review',
+				channel => channel.name === '📝 Project Review'
 			);
 			await category.createChannel(channelName, { type: 'GUILD_VOICE' });
 			await send.reply(interaction, send.msgs['Created'], channelName);
@@ -69,7 +69,7 @@ module.exports = {
 
 function channelExist(guild, channelName) {
 	const channel = guild.channels.cache.find(
-		channel => channel.name === channelName,
+		channel => channel.name === channelName
 	);
 	if (channel) return true;
 	return false;

@@ -6,18 +6,18 @@ exports.respond = async function (interaction) {
 
 	const guild = interaction.member.guild;
 	const category = guild.channels.cache.find(
-		channel => channel.name === '📝 Project Review',
+		channel => channel.name === '📝 Project Review'
 	);
 	const channels = category.children;
 
 	const deleteChannel = channels.find(
-		channel => channel.name === interaction.customId,
+		channel => channel.name === interaction.customId
 	);
 	if (!deleteChannel) {
 		await send.followUp(
 			interaction,
 			send.msgs['DeteleAgain'],
-			interaction.customId,
+			interaction.customId
 		);
 		return;
 	}
@@ -25,6 +25,6 @@ exports.respond = async function (interaction) {
 	await send.followUp(
 		interaction,
 		send.msgs['Deleted'],
-		interaction.customId,
+		interaction.customId
 	);
 };
