@@ -61,7 +61,9 @@ function channelExist(guild, channelName) {
 	const channel = guild.channels.cache.find(
 		channel => channel.name === channelName
 	);
-	if (channel) return true;
+	if (channel) {
+		return true;
+	}
 	return false;
 }
 
@@ -93,7 +95,8 @@ function getTime(interaction) {
 	const hour = interaction.options.getInteger('hour');
 	let min = interaction.options.getInteger('min');
 
-	if (min == 0) min = '0' + min;
-
+	if (min == 0) {
+		min = '0' + min;
+	}
 	return hour + ':' + min + '~';
 }

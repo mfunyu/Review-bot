@@ -35,7 +35,9 @@ module.exports = {
 			switch (selection) {
 				case 'all':
 					ret = await doneAll(interaction, channels, deleteChannels);
-					if (ret == -1) return;
+					if (ret == -1) {
+						return;
+					}
 					break;
 				case 'current':
 					ret = await doneCurrent(
@@ -43,7 +45,9 @@ module.exports = {
 						category,
 						deleteChannels
 					);
-					if (ret == -1) return;
+					if (ret == -1) {
+						return;
+					}
 					break;
 				case 'choose':
 					doneChoose(Discord, interaction, channels);
@@ -83,7 +87,9 @@ function createButtonRow(Discord, vc_lists) {
 	let row_index = -1;
 	let index = 0;
 	vc_lists.forEach(channel_name => {
-		if (index >= VC_LIMIT) return;
+		if (index >= VC_LIMIT) {
+			return;
+		}
 		if (index % MAX_ROW_MEMBERS == 0) {
 			row.push(new Discord.MessageActionRow());
 			row_index++;
@@ -144,12 +150,16 @@ function formatChannelNames(deleteChannels) {
 
 function getConnectingVoiceChannel(interaction) {
 	const channel_id = interaction.member.voice.channelId;
-	if (!channel_id) return;
+	if (!channel_id) {
+		return;
+	}
 	return interaction.member.guild.channels.cache.find(
 		channel => channel.id === channel_id
 	);
 }
 
 async function deleteSelectedChannels(deleteChannels) {
-	for (channel of deleteChannels) await channel.delete();
+	for (channel of deleteChannels) {
+		await channel.delete();
+	}
 }

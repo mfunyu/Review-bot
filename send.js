@@ -48,9 +48,13 @@ function createChooseMessageContent(vc_lists) {
 	let index = 0;
 
 	vc_lists.forEach(channel_name => {
-		if (index % 5 == 0) msg += '\n';
+		if (index % 5 == 0) {
+			msg += '\n';
+		}
 		index++;
-		if (index > VC_LIMIT) return;
+		if (index > VC_LIMIT) {
+			return;
+		}
 		msg += `:${dict[index]}:  ${wrapCodeBlock(channel_name)}\n`;
 	});
 
@@ -63,52 +67,53 @@ function createChooseMessageContent(vc_lists) {
 }
 
 function set_msg_content(msg, params) {
-	if (msg == exports.msgs['Duplicate'])
+	if (msg == exports.msgs['Duplicate']) {
 		return `レビューチャンネル ${wrapCodeBlock(
 			params
 		)} はすでに存在しています`;
-	if (msg == exports.msgs['NotFound'])
-		return `${wrapCodeBlock(
-			params
-		)} を含むボイスチャンネルが見つかりません`;
-	if (msg == exports.msgs['NotInVC'])
+	} else if (msg == exports.msgs['NotFound']) {
+		return `${wrapCodeBlock(params)}\
+		を含むボイスチャンネルが見つかりません`;
+	} else if (msg == exports.msgs['NotInVC']) {
 		return '入室中のボイスチャンネルがありません';
-	if (msg == exports.msgs['NotInCategory'])
+	} else if (msg == exports.msgs['NotInCategory']) {
 		return '入室中のボイスチャンネルがレビューチャンネルではありません';
-	if (msg == exports.msgs['Created'])
+	} else if (msg == exports.msgs['Created']) {
 		return `レビューチャンネル ${wrapCodeBlock(params)} を作成しました`;
-	if (msg == exports.msgs['Choose'])
+	} else if (msg == exports.msgs['Choose']) {
 		return `以下のチャンネルが見つかりました。\n削除したいチャンネルの番号を選択してください\n\
 		${createChooseMessageContent(params)}`;
-	if (msg == exports.msgs['Deleted'])
+	} else if (msg == exports.msgs['Deleted']) {
 		return `レビューチャンネル ${wrapCodeBlock(params)} を削除しました`;
-	if (msg == exports.msgs['DeteleAgain'])
+	} else if (msg == exports.msgs['DeteleAgain']) {
 		return `レビューチャンネル ${wrapCodeBlock(params)} \
 		はすでに削除されています`;
+	}
 }
 
 exports.reply = async function (interaction, msg, params, row) {
 	const msg_title = `${msg.emoji}  ${msg.title}`;
 
-	if (msg.type == Type.warning)
+	if (msg.type == Type.warning) {
 		content = embed.warning(msg_title, set_msg_content(msg, params));
-	else if (msg.type == Type.info)
+	} else if (msg.type == Type.info) {
 		content = embed.info(msg_title, set_msg_content(msg, params));
-	else if (msg.type == Type.help) {
+	} else if (msg.type == Type.help) {
 		content = embed.help(msg_title, params);
 	}
 
-	if (row)
+	if (row) {
 		await interaction.reply({
 			embeds: [content],
 			ephemeral: true,
 			components: row,
 		});
-	else
+	} else {
 		await interaction.reply({
 			embeds: [content],
 			ephemeral: true,
 		});
+	}
 };
 
 exports.followUp = async function (interaction, msg, params) {
