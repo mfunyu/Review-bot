@@ -120,7 +120,7 @@ async def on_message(message):
         if not username:
             username = message.author.name
         for channel in CATEGORY.channels:
-            if username in channel.name:
+            if f'/{username}/' in channel.name:
                 reply += f'\"{channel.name}\" '
                 await channel.delete()
         if not reply:
