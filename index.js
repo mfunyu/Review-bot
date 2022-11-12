@@ -26,7 +26,6 @@ client.once('ready', async () => {
 		data.push(commands[commandName].data);
 	}
 	await client.application.commands.set(data, process.env.SERVER_ID);
-	console.log('Ready!');
 });
 
 client.on('interactionCreate', async interaction => {
@@ -49,4 +48,4 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
-client.login(process.env.MY_DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN);
