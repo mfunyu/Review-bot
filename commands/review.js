@@ -49,7 +49,7 @@ module.exports = {
 			}
 
 			const category = guild.channels.cache.find(
-				channel => channel.name === '📝 Project Review'
+				channel => channel.name === process.env.VOICE_CATEGORY
 			);
 			await category.createChannel(channelName, { type: 'GUILD_VOICE' });
 			await send.reply(interaction, send.msgs['Created'], channelName);

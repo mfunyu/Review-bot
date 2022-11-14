@@ -6,7 +6,7 @@ exports.respond = async function (interaction) {
 
 	const guild = interaction.member.guild;
 	const category = guild.channels.cache.find(
-		channel => channel.name === '📝 Project Review'
+		channel => channel.name === process.env.VOICE_CATEGORY
 	);
 	const channels = category.children;
 
