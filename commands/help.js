@@ -12,9 +12,8 @@ module.exports = {
 					name: ':loud_sound:レビューチャンネルを作成する',
 					value:
 						' `/review`\n\
-						`[project_name]`- レビューするプロジェクトの名前を入力する\n\
-						`[hour]`- レビューの開始時間（時）を選択する\n\
-						`[min]`- レビューの開始時間（分）を選択する\n\
+						`[project]`- レビューするプロジェクトの名前を入力する\n\
+						`[time]`- レビューの開始時間（hhmm）を入力する\n\
 						`[reviewer] (optional)` - レビュワーに自分以外のユーザーを選択する\n\n\
 						',
 				},

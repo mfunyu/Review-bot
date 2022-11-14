@@ -1,4 +1,3 @@
-const vals = require('../choices.js');
 const send = require('../send.js');
 
 module.exports = {
@@ -8,23 +7,15 @@ module.exports = {
 		options: [
 			{
 				type: 'STRING',
-				name: 'project_name',
-				description: 'name of the reviewing project',
+				name: 'project',
+				description: 'レビューするプロジェクト名',
 				required: true,
 			},
 			{
-				name: 'hour',
-				description: 'review starting time h',
+				name: 'time',
+				description: 'レビュー開始時間（hhmm）',
 				type: 'INTEGER',
 				required: true,
-				choices: vals.hours,
-			},
-			{
-				name: 'min',
-				description: 'review starting time m',
-				type: 'INTEGER',
-				required: true,
-				choices: vals.mins,
 			},
 			{
 				name: 'reviewer',
@@ -92,10 +83,17 @@ function createChannelName(interaction) {
 }
 
 function getTime(interaction) {
-	const hour = interaction.options.getInteger('hour');
-	let min = interaction.options.getInteger('min');
+	const time = interaction.options.getInteger('time');
+	if (time >= 2600 || time < 0) {
+		return time;
+	}
+	const hour = Math.floor(time / 100);
+	let min = time % 100;
 
-	if (min == 0) {
+	if (min >= 60) {
+		return time;
+	}
+	if (min < 10) {
 		min = '0' + min;
 	}
 	return hour + ':' + min + '~';
