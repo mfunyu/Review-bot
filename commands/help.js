@@ -3,7 +3,7 @@ const send = require('../send.js');
 module.exports = {
 	data: {
 		name: 'help',
-		description: "show help for Review-bot's commands",
+		description: 'Review-botのヘルプを表示する',
 	},
 	async execute(interaction) {
 		if (interaction.commandName == 'help') {

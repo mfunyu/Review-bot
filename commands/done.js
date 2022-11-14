@@ -4,11 +4,11 @@ const send = require('../send.js');
 module.exports = {
 	data: {
 		name: 'done',
-		description: 'delete review voice channel',
+		description: 'レビューチャンネルを削除する',
 		options: [
 			{
 				name: 'selection',
-				description: 'delete all voice channels with your name',
+				description: '削除するVCを選択する',
 				type: 'STRING',
 				required: true,
 				default: 'one',

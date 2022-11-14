@@ -3,7 +3,7 @@ const send = require('../send.js');
 module.exports = {
 	data: {
 		name: 'review',
-		description: 'create review voice channel',
+		description: 'レビューチャンネルを作成する',
 		options: [
 			{
 				type: 'STRING',
@@ -19,7 +19,7 @@ module.exports = {
 			},
 			{
 				name: 'reviewer',
-				description: 'creating voice channel for somebody else',
+				description: 'レビュワーを指定する',
 				type: 'USER',
 				required: false,
 			},
