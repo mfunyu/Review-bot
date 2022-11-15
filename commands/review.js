@@ -71,7 +71,7 @@ function getDisplayName(interaction, user) {
 }
 
 function createChannelName(interaction) {
-	const projectName = interaction.options.getString('project_name');
+	const projectName = interaction.options.getString('project');
 	const user = interaction.options.getUser('reviewer');
 
 	const userName = getDisplayName(interaction, user);
