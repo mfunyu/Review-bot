@@ -6,9 +6,9 @@ module.exports = {
 		description: 'レビューチャンネルを作成する',
 		options: [
 			{
-				type: 'STRING',
 				name: 'project',
 				description: 'レビューするプロジェクト名',
+				type: 'STRING',
 				required: true,
 			},
 			{
