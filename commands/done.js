@@ -74,9 +74,19 @@ async function doneChoose(Discord, interaction, channels) {
 		await send.reply(interaction, send.msgs['NotFound'], userName);
 		return;
 	}
+	vc_lists.sort(channelNameCompareFunc);
 	const row = createButtonRow(Discord, vc_lists);
 	await send.reply(interaction, send.msgs['Choose'], vc_lists, row);
 	return;
+}
+
+function channelNameCompareFunc(name1, name2) {
+	if (!name1.endsWith('~') || !name2.endsWith('~')) {
+		return name2.at(-1).charCodeAt(0) - name1.at(-1).charCodeAt(0);
+	}
+	const time1 = name1.slice(name1.lastIndexOf('/') + 1, -1).replace(':', '');
+	const time2 = name2.slice(name2.lastIndexOf('/') + 1, -1).replace(':', '');
+	return parseInt(time1, 10) - parseInt(time2, 10);
 }
 
 function createButtonRow(Discord, vc_lists) {
