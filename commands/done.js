@@ -26,7 +26,7 @@ module.exports = {
 
 			const selection = interaction.options.getString('selection');
 			const category = guild.channels.cache.find(
-				channel => channel.name === '📝 Project Review'
+				channel => channel.name === process.env.VOICE_CATEGORY
 			);
 			const channels = category.children;
 			const deleteChannels = [];
