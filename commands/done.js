@@ -7,16 +7,19 @@ module.exports = {
 		description: 'レビューチャンネルを削除する',
 		options: [
 			{
-				name: 'selection',
-				description: '削除するVCを選択する',
-				type: 'STRING',
-				required: true,
-				default: 'one',
-				choices: [
-					{ name: 'choose', value: 'choose' },
-					{ name: 'all', value: 'all' },
-					{ name: 'current', value: 'current' },
-				],
+				name: 'choose',
+				description: 'チャンネルを選択して削除する',
+				type: 'SUB_COMMAND',
+			},
+			{
+				name: 'all',
+				description: '自分のチャンネルを全て削除する',
+				type: 'SUB_COMMAND',
+			},
+			{
+				name: 'current',
+				description: '現在入室中のチャンネルを削除する',
+				type: 'SUB_COMMAND',
 			},
 		],
 	},
@@ -24,7 +27,7 @@ module.exports = {
 		if (interaction.commandName == 'done') {
 			const guild = interaction.member.guild;
 
-			const selection = interaction.options.getString('selection');
+			const selection = interaction.options.getSubcommand();
 			const category = guild.channels.cache.find(
 				channel => channel.name === process.env.VOICE_CATEGORY
 			);
