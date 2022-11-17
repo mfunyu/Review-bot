@@ -37,14 +37,12 @@ module.exports = {
 			let ret;
 			switch (selection) {
 				case 'all':
-					await send.deferReply(interaction);
 					ret = await doneAll(interaction, channels, deleteChannels);
 					if (ret == -1) {
 						return;
 					}
 					break;
 				case 'current':
-					await send.deferReply(interaction);
 					ret = await doneCurrent(
 						interaction,
 						category,
@@ -58,6 +56,7 @@ module.exports = {
 					doneChoose(Discord, interaction, channels);
 					return;
 			}
+			await send.deferReply(interaction);
 
 			const channelNames = formatChannelNames(deleteChannels);
 			await deleteSelectedChannels(deleteChannels);
