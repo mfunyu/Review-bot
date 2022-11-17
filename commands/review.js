@@ -40,10 +40,10 @@ module.exports = {
 			const { time, invalid } = getTime(interaction);
 			if (invalid) {
 				await send.reply(
-				interaction,
+					interaction,
 					send.msgs['Invalid'],
 					`time: ${time}`
-			);
+				);
 				return;
 			}
 			const channelName = createChannelName(interaction, reviewer, time);
@@ -63,9 +63,9 @@ module.exports = {
 			const channel = await category.createChannel(channelName, {
 				type: 'GUILD_VOICE',
 			});
-				setTimeout(() => {
+			setTimeout(() => {
 				notifyUser(channel, reviewer, time);
-				}, calcDeley(time));
+			}, calcDeley(time));
 			await send.reply(interaction, send.msgs['Created'], channelName);
 		}
 	},
@@ -84,6 +84,7 @@ function calcDeley(time) {
 }
 
 function notifyUser(channel, reviewer, time) {
+	if (reviewer.voice && reviewer.voice.channel.name == channel.name) return;
 	send.send(channel, send.msgs['Notify'], reviewer, time);
 }
 
