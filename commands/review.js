@@ -49,7 +49,7 @@ module.exports = {
 			const category = guild.channels.cache.find(
 				channel => channel.name === process.env.VOICE_CATEGORY
 			);
-			channel = await category.createChannel(channelName, {
+			const channel = await category.createChannel(channelName, {
 				type: 'GUILD_VOICE',
 			});
 			if (!invalid) {
@@ -65,8 +65,13 @@ module.exports = {
 function calcDeley(time) {
 	const timeElapsed = Date.now();
 	const event = new Date(timeElapsed);
-	event.setMinutes(time.slice(-2));
-	return event.valueOf() - Date.now();
+	event.setHours(time.slice(0, -3), time.slice(-2), 0, 0);
+	delay = event.valueOf() - Date.now();
+	if (delay < 0) {
+		event.setDate(event.getDate() + 1);
+		delay = event.valueOf() - Date.now();
+	}
+	return delay;
 }
 
 function callUser(channel, reviewer, time) {
