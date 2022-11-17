@@ -10,6 +10,7 @@ exports.warning = function (type, message) {
 exports.info = function (type, message) {
 	const embed = {
 		title: type,
+		description: message,
 		color: 0x4548ef,
 	};
 	return embed;
