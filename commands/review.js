@@ -54,7 +54,7 @@ module.exports = {
 			});
 			if (!invalid) {
 				setTimeout(() => {
-					callUser(channel, reviewer, time);
+				notifyUser(channel, reviewer, time);
 				}, calcDeley(time));
 			}
 			await send.reply(interaction, send.msgs['Created'], channelName);
@@ -74,7 +74,7 @@ function calcDeley(time) {
 	return delay;
 }
 
-function callUser(channel, reviewer, time) {
+function notifyUser(channel, reviewer, time) {
 	send.send(channel, send.msgs['Notify'], reviewer, time);
 }
 
