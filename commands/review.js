@@ -29,13 +29,24 @@ module.exports = {
 		if (interaction.commandName == 'review') {
 			const guild = interaction.member.guild;
 			const reviewer = getReviewer(interaction);
+			if (reviewer.user.bot) {
+				await send.reply(
+					interaction,
+					send.msgs['Invalid'],
+					`reviewer: ${reviewer.user.username}`
+				);
+				return;
+			}
 			const { time, invalid } = getTime(interaction);
-			const channelName = createChannelName(
+			if (invalid) {
+				await send.reply(
 				interaction,
-				reviewer,
-				time,
-				invalid
+					send.msgs['Invalid'],
+					`time: ${time}`
 			);
+				return;
+			}
+			const channelName = createChannelName(interaction, reviewer, time);
 
 			if (channelExist(guild, channelName)) {
 				await send.reply(
@@ -52,11 +63,9 @@ module.exports = {
 			const channel = await category.createChannel(channelName, {
 				type: 'GUILD_VOICE',
 			});
-			if (!invalid) {
 				setTimeout(() => {
 				notifyUser(channel, reviewer, time);
 				}, calcDeley(time));
-			}
 			await send.reply(interaction, send.msgs['Created'], channelName);
 		}
 	},
