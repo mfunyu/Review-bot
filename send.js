@@ -91,16 +91,20 @@ function set_msg_content(msg, params) {
 	}
 }
 
-exports.reply = async function (interaction, msg, params, row) {
+function set_embed(msg, params) {
 	const msg_title = `${msg.emoji}  ${msg.title}`;
 
 	if (msg.type == Type.warning) {
-		content = embed.warning(msg_title, set_msg_content(msg, params));
+		return embed.warning(msg_title, set_msg_content(msg, params));
 	} else if (msg.type == Type.info) {
-		content = embed.info(msg_title, set_msg_content(msg, params));
+		return embed.info(msg_title, set_msg_content(msg, params));
 	} else if (msg.type == Type.help) {
-		content = embed.help(msg_title, params);
+		return embed.help(msg_title, params);
 	}
+	}
+
+exports.reply = async function (interaction, msg, params, row) {
+	content = set_embed(msg, params);
 
 	if (row) {
 		await interaction.reply({
@@ -117,14 +121,7 @@ exports.reply = async function (interaction, msg, params, row) {
 };
 
 exports.followUp = async function (interaction, msg, params) {
-	const msg_title = `${msg.emoji}  ${msg.title}`;
-	const msg_content = set_msg_content(msg, wrapCodeBlock(params));
-
-	let content;
-	if (msg.type == Type.warning)
-		content = embed.warning(msg_title, msg_content);
-	else if (msg.type == Type.info)
-		content = embed.info(msg_title, msg_content);
+	content = set_embed(msg, wrapCodeBlock(params));
 
 	await interaction.followUp({ embeds: [content], ephemeral: true });
 };
