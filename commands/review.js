@@ -64,7 +64,7 @@ module.exports = {
 				type: 'GUILD_VOICE',
 			});
 			setTimeout(() => {
-				notifyUser(channel, reviewer, time);
+				notifyUser(guild, channel, reviewer, time);
 			}, calcDeley(time));
 			await send.reply(interaction, send.msgs['Created'], channelName);
 		}
@@ -83,7 +83,8 @@ function calcDeley(time) {
 	return delay;
 }
 
-function notifyUser(channel, reviewer, time) {
+function notifyUser(guild, channel, reviewer, time) {
+	if (!guild.channels.cache.get(channel.id)) return;
 	if (reviewer.voice && reviewer.voice.channel.name == channel.name) return;
 	send.send(channel, send.msgs['Notify'], reviewer, time);
 }
