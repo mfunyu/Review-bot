@@ -28,10 +28,9 @@ module.exports = {
 	async execute(interaction) {
 		if (interaction.commandName == 'review') {
 			const guild = interaction.member.guild;
-			const user = interaction.options.getUser('reviewer');
-			const userName = getDisplayName(interaction, user);
+			const reviewer = getReviewer(interaction);
 			const time = getTime(interaction);
-			const channelName = createChannelName(interaction, userName, time);
+			const channelName = createChannelName(interaction, reviewer, time);
 
 			if (channelExist(guild, channelName)) {
 				await send.reply(
@@ -61,21 +60,20 @@ function channelExist(guild, channelName) {
 	return false;
 }
 
-function getDisplayName(interaction, user) {
-	let displayName;
+function getReviewer(interaction) {
+	const user = interaction.options.getUser('reviewer');
+
 	if (user) {
 		const guild = interaction.member.guild;
-		const member = guild.members.resolve(user.id);
-		displayName = member ? member.displayName : null;
-	} else {
-		displayName = interaction.member.displayName;
+		return guild.members.resolve(user.id);
 	}
-	return displayName;
+	return interaction.member;
 }
 
-function createChannelName(interaction, userName, time) {
+function createChannelName(interaction, reviewer, time) {
 	const projectName = interaction.options.getString('project');
-	const channelName = projectName + '/' + userName + '/' + time + '~';
+	const channelName =
+		projectName + '/' + reviewer.displayName + '/' + time + '~';
 
 	return channelName;
 }
