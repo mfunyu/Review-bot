@@ -8,7 +8,8 @@ function wrapCodeBlock(string) {
 var Type = {
 	info: 0,
 	warning: 1,
-	help: 2,
+	error: 2,
+	help: 3,
 };
 
 exports.msgs = {
@@ -17,6 +18,7 @@ exports.msgs = {
 	NotInVC: { type: Type.warning, emoji: ':mute:', title: 'Not In VC' },
 	NotInCategory: { type: Type.warning, emoji: ':mute:', title: 'Not In VC' },
 	DeteleAgain: { type: Type.warning, emoji: ':warning:', title: 'Not Found' },
+	Invalid: { type: Type.error, emoji: ':x:', title: 'Invalid Input' },
 	Created: { type: Type.info, emoji: ':loud_sound:', title: 'Created' },
 	Choose: { type: Type.info, emoji: ':notepad_spiral:', title: 'Choose' },
 	Deleted: { type: Type.info, emoji: ':wastebasket:', title: 'Deteled' },
@@ -89,6 +91,9 @@ function set_msg_content(msg, params) {
 	} else if (msg == exports.msgs['DeteleAgain']) {
 		return `レビューチャンネル ${wrapCodeBlock(params)} \
 		はすでに削除されています`;
+	} else if (msg == exports.msgs['Invalid']) {
+		return `少なくとも以下のフィールドの入力が不正です\n\
+		${wrapCodeBlock(params)}`;
 	} else if (msg == exports.msgs['Notify']) {
 		return `${wrapCodeBlock(params)}から、\
 		こちらのチャンネルでレビューが予定されています`;
@@ -102,6 +107,8 @@ function set_embed(msg, params) {
 		return embed.warning(msg_title, set_msg_content(msg, params));
 	} else if (msg.type == Type.info) {
 		return embed.info(msg_title, set_msg_content(msg, params));
+	} else if (msg.type == Type.error) {
+		return embed.error(msg_title, set_msg_content(msg, params));
 	} else if (msg.type == Type.help) {
 		return embed.help(msg_title, params);
 	}

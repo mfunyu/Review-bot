@@ -10,8 +10,16 @@ exports.warning = function (type, message) {
 exports.info = function (type, message) {
 	const embed = {
 		title: type,
-		description: message,
 		color: 0x4548ef,
+	};
+	return embed;
+};
+
+exports.error = function (type, message) {
+	const embed = {
+		title: type,
+		description: message,
+		color: 0xd8544f,
 	};
 	return embed;
 };
