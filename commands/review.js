@@ -29,12 +29,12 @@ module.exports = {
 		if (interaction.commandName == 'review') {
 			const guild = interaction.member.guild;
 			const reviewer = getReviewer(interaction);
-			const { time, err } = getTime(interaction);
+			const { time, invalid } = getTime(interaction);
 			const channelName = createChannelName(
 				interaction,
 				reviewer,
 				time,
-				err
+				invalid
 			);
 
 			if (channelExist(guild, channelName)) {
@@ -52,7 +52,7 @@ module.exports = {
 			channel = await category.createChannel(channelName, {
 				type: 'GUILD_VOICE',
 			});
-			if (!err) {
+			if (!invalid) {
 				setTimeout(() => {
 					callUser(channel, reviewer, time);
 				}, calcDeley(time));
@@ -93,9 +93,9 @@ function getReviewer(interaction) {
 	return interaction.member;
 }
 
-function createChannelName(interaction, reviewer, time, err) {
+function createChannelName(interaction, reviewer, time, invalid) {
 	const projectName = interaction.options.getString('project');
-	if (!err) time = time + '~';
+	if (!invalid) time = time + '~';
 	const channelName = projectName + '/' + reviewer.displayName + '/' + time;
 
 	return channelName;
@@ -104,16 +104,16 @@ function createChannelName(interaction, reviewer, time, err) {
 function getTime(interaction) {
 	const time = interaction.options.getInteger('time');
 	if (time >= 2600 || time < 0) {
-		return { time, err: true };
+		return { time, invalid: true };
 	}
 	const hour = Math.floor(time / 100);
 	let min = time % 100;
 
 	if (min >= 60) {
-		return { time, err: true };
+		return { time, invalid: true };
 	}
 	if (min < 10) {
 		min = '0' + min;
 	}
-	return { time: hour + ':' + min, err: false };
+	return { time: hour + ':' + min, invalid: false };
 }
