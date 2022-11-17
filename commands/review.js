@@ -29,8 +29,13 @@ module.exports = {
 		if (interaction.commandName == 'review') {
 			const guild = interaction.member.guild;
 			const reviewer = getReviewer(interaction);
-			const time = getTime(interaction);
-			const channelName = createChannelName(interaction, reviewer, time);
+			const { time, err } = getTime(interaction);
+			const channelName = createChannelName(
+				interaction,
+				reviewer,
+				time,
+				err
+			);
 
 			if (channelExist(guild, channelName)) {
 				await send.reply(
@@ -70,10 +75,10 @@ function getReviewer(interaction) {
 	return interaction.member;
 }
 
-function createChannelName(interaction, reviewer, time) {
+function createChannelName(interaction, reviewer, time, err) {
 	const projectName = interaction.options.getString('project');
-	const channelName =
-		projectName + '/' + reviewer.displayName + '/' + time + '~';
+	if (!err) time = time + '~';
+	const channelName = projectName + '/' + reviewer.displayName + '/' + time;
 
 	return channelName;
 }
@@ -81,16 +86,16 @@ function createChannelName(interaction, reviewer, time) {
 function getTime(interaction) {
 	const time = interaction.options.getInteger('time');
 	if (time >= 2600 || time < 0) {
-		return time;
+		return { time, err: true };
 	}
 	const hour = Math.floor(time / 100);
 	let min = time % 100;
 
 	if (min >= 60) {
-		return time;
+		return { time, err: true };
 	}
 	if (min < 10) {
 		min = '0' + min;
 	}
-	return hour + ':' + min;
+	return { time: hour + ':' + min, err: false };
 }
