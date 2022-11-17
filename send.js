@@ -20,6 +20,7 @@ exports.msgs = {
 	Created: { type: Type.info, emoji: ':loud_sound:', title: 'Created' },
 	Choose: { type: Type.info, emoji: ':notepad_spiral:', title: 'Choose' },
 	Deleted: { type: Type.info, emoji: ':wastebasket:', title: 'Deteled' },
+	Notify: { type: Type.info, emoji: ':mega:', title: 'Notification' },
 	Help: { type: Type.help, emoji: ':mega:', title: 'Help' },
 };
 
@@ -88,6 +89,9 @@ function set_msg_content(msg, params) {
 	} else if (msg == exports.msgs['DeteleAgain']) {
 		return `レビューチャンネル ${wrapCodeBlock(params)} \
 		はすでに削除されています`;
+	} else if (msg == exports.msgs['Notify']) {
+		return `${wrapCodeBlock(params)}から、\
+		こちらのチャンネルでレビューが予定されています`;
 	}
 }
 
@@ -101,7 +105,7 @@ function set_embed(msg, params) {
 	} else if (msg.type == Type.help) {
 		return embed.help(msg_title, params);
 	}
-	}
+}
 
 exports.reply = async function (interaction, msg, params, row) {
 	content = set_embed(msg, params);
@@ -128,4 +132,10 @@ exports.followUp = async function (interaction, msg, params) {
 
 exports.deferReply = async function (interaction) {
 	await interaction.deferReply({ ephemeral: true });
+};
+
+exports.send = function (channel, msg, user, param) {
+	content = set_embed(msg, param);
+
+	channel.send({ content: `${user.toString()} さん`, embeds: [content] });
 };

@@ -49,11 +49,29 @@ module.exports = {
 			const category = guild.channels.cache.find(
 				channel => channel.name === process.env.VOICE_CATEGORY
 			);
-			await category.createChannel(channelName, { type: 'GUILD_VOICE' });
+			channel = await category.createChannel(channelName, {
+				type: 'GUILD_VOICE',
+			});
+			if (!err) {
+				setTimeout(() => {
+					callUser(channel, reviewer, time);
+				}, calcDeley(time));
+			}
 			await send.reply(interaction, send.msgs['Created'], channelName);
 		}
 	},
 };
+
+function calcDeley(time) {
+	const timeElapsed = Date.now();
+	const event = new Date(timeElapsed);
+	event.setMinutes(time.slice(-2));
+	return event.valueOf() - Date.now();
+}
+
+function callUser(channel, reviewer, time) {
+	send.send(channel, send.msgs['Notify'], reviewer, time);
+}
 
 function channelExist(guild, channelName) {
 	const channel = guild.channels.cache.find(
