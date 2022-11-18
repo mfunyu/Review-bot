@@ -6,7 +6,8 @@
 	"dependencies": {
 		"discord.js": "^13.12.0",
 		"discord.js-buttons": "^1.0.0",
-		"dotenv": "^16.0.0"
+		"dotenv": "^16.0.0",
+		"pg": "^8.8.0"
 	},
 	"name": "review-bot",
 	"description": "## Botの概要",
