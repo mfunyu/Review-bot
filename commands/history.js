@@ -28,6 +28,9 @@ module.exports = {
 			data.rows.forEach(e => {
 				value += `・ ${e.begin_at} - ${e.project}\n`;
 			});
+			if (!value) {
+				value = 'レビュー履歴はまだありません';
+			}
 			const field = [
 				{
 					name: user.username,
