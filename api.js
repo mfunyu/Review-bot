@@ -1,6 +1,4 @@
-const page_size = 100;
-
-exports.getAccessTokenRequest = function () {
+exports.getAccessToken = function () {
 	const body =
 		'grant_type=client_credentials' +
 		'&' +
@@ -18,11 +16,12 @@ exports.getAccessTokenRequest = function () {
 	return fetch(request).then(response => response.json());
 };
 
-function getRawData(token, idx) {
+exports.getRawData = function (token, idx) {
 	const headers = {
 		Authorization: `Bearer ${token}`,
 	};
 	const campus_id = 26;
+	const page_size = 100;
 	const options =
 		'?' +
 		`filter[campus_id]=${campus_id}` +
@@ -39,9 +38,9 @@ function getRawData(token, idx) {
 	);
 
 	return fetch(request).then(response => response.json());
-}
+};
 
-function parseData(rawdata) {
+exports.parseData = function (rawdata) {
 	const histories = [];
 	rawdata.forEach(e => {
 		let project = e.team.project_gitlab_path;
@@ -51,8 +50,8 @@ function parseData(rawdata) {
 			time: e.begin_at,
 			project,
 			corrector: e.corrector.login,
-			corrected,
+			corrected: e.corrected,
 		});
 	});
 	return histories;
-}
+};

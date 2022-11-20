@@ -21,7 +21,7 @@ module.exports = {
 			const displayName = guild.members.resolve(user.id).displayName;
 
 			const data = await pgClient.query(
-				`SELECT project, to_char(begin_at, 'YYYY/MM/DD HH24:MI') as begin_at from reviews where corrector = $1::text or correcteds = $1::text `,
+				`SELECT project, to_char(begin_at, 'YYYY/MM/DD HH24:MI') as begin_at from reviews where corrector = $1::text or corrected = $1::text `,
 				[displayName]
 			);
 			let value = '';

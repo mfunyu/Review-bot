@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const onclick = require('./onclick.js');
 const db = require('./db.js');
+const api = require('./api.js');
 const { Client: PGClient } = require('pg');
 const schedule = require('node-schedule');
 
@@ -27,26 +28,23 @@ pgClient.query(
 		)'
 );
 
-async function run() {
-	try {
-		const res = await api.getAccessToken();
-		await api.getAllData(res.access_token);
-
-		let i = 1;
-		while (True) {
-			const rawdata = await getRawData(token, i);
-			const data = parseData(rawdata);
-			if (rawdata.length != page_size) {
-				break;
-			}
-			const query = db.formQuery(data);
-			pgClient.query(query);
-			i++;
+async function getAllData(token) {
+	let i = 1;
+	while (true) {
+		const rawdata = await api.getRawData(token, i);
+		const data = api.parseData(rawdata);
+		if (rawdata.length != 100) {
+			break;
 		}
-	} catch {
-		failureCallback(error);
+		const query = db.formQuery(data);
+		pgClient.query(query);
+		i++;
 	}
 }
+
+api.getAccessToken()
+	.then(res => getAllData(res.access_token))
+	.catch(error => console.log(error));
 
 // schedule.scheduleJob(prosess.env.INTERVAL, function () {
 // 	fetch(api.getAccessTokenRequest())
