@@ -26,6 +26,8 @@ exports.getRawData = function (token, idx) {
 		'?' +
 		`filter[campus_id]=${campus_id}` +
 		'&' +
+		`filter[cursus_id]=${process.env.CURSUS_ID}` +
+		'&' +
 		'sort=-begin_at' +
 		'&' +
 		`page[size]=${page_size}` +
