@@ -21,10 +21,18 @@ module.exports = {
 			const displayName = guild.members.resolve(user.id).displayName;
 
 			const limit = 20;
-			const query = `SELECT project, r.id, corrector, array_agg(corrected), to_char(begin_at, 'YYYY/MM/DD HH24:MI') as begin_at FROM reviews r RIGHT JOIN correcteds on r.id = review_id WHERE corrector = $1::text or corrected = $1::text GROUP BY r.id ORDER BY begin_at DESC LIMIT ${limit}`;
+			const query =
+				`SELECT project, r.id, corrector, array_agg(corrected), to_char(begin_at, 'YYYY/MM/DD HH24:MI') as begin_at` +
+				' FROM reviews r' +
+				' RIGHT JOIN correcteds on r.id = review_id' +
+				' WHERE corrector = $1::text or corrected = $1::text' +
+				' GROUP BY r.id' +
+				' ORDER BY begin_at DESC' +
+				` LIMIT ${limit}`;
 
 			const data = await pgClient.query(query, [displayName]);
 			console.dir(data.rows, { maxArrayLength: null });
+
 			let value = '';
 			data.rows.forEach(e => {
 				value += `・ ${e.begin_at} - ${e.project}\n`;
