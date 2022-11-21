@@ -20,11 +20,18 @@ pgClient.connect();
 
 pgClient.query(
 	'CREATE TABLE IF NOT EXISTS reviews ( \
-		id UUID PRIMARY KEY DEFAULT gen_random_uuid(), \
+		id INTEGER PRIMARY KEY, \
 		corrector VARCHAR ( 25 ) NOT NULL, \
-		corrected VARCHAR ( 25 ) NOT NULL, \
-		project VARCHAR ( 25 ) NOT NULL, \
-		begin_at TIMESTAMP NOT NULL \
+		project VARCHAR ( 50 ) NOT NULL, \
+		begin_at TIMESTAMP WITH TIME ZONE NOT NULL \
+		)'
+);
+
+pgClient.query(
+	'CREATE TABLE IF NOT EXISTS correcteds ( \
+		id VARCHAR ( 25 ) PRIMARY KEY, \
+		review_id INTEGER REFERENCES reviews (id) NOT NULL, \
+		corrected VARCHAR ( 25 ) NOT NULL \
 		)'
 );
 
@@ -36,8 +43,7 @@ async function getAllData(token) {
 		if (rawdata.length != 100) {
 			break;
 		}
-		const query = db.formQuery(data);
-		pgClient.query(query);
+		db.execInsert(data, pgClient);
 		i++;
 	}
 }

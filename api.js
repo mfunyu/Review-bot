@@ -48,11 +48,16 @@ exports.parseData = function (rawdata) {
 		let project = e.team.project_gitlab_path;
 		project = project.slice(project.lastIndexOf('/') + 1);
 
+		let correcteds = [];
+		e.correcteds.forEach(c => {
+			correcteds.push({ id: c.id, login: c.login });
+		});
 		histories.push({
+			id: e.id,
 			time: e.begin_at,
 			project,
 			corrector: e.corrector.login,
-			corrected: e.corrected,
+			correcteds,
 		});
 	});
 	return histories;
