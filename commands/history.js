@@ -20,42 +20,10 @@ module.exports = {
 			const guild = interaction.member.guild;
 			const displayName = guild.members.resolve(user.id).displayName;
 
-			const limit = 20;
-			const query =
-				`SELECT project, r.id, corrector, array_agg(corrected) as correcteds, to_char(begin_at, 'YYYY/MM/DD HH24:MI') as begin_at` +
-				' FROM reviews r' +
-				' RIGHT JOIN correcteds on r.id = review_id' +
-				' WHERE corrector = $1::text or corrected = $1::text' +
-				' GROUP BY r.id' +
-				' ORDER BY begin_at DESC' +
-				` LIMIT ${limit}`;
-
-			const data = await pgClient.query(query, [displayName]);
+			const data = await getDateFromDB(pgClient, displayName);
 			console.dir(data.rows, { maxArrayLength: null });
 
-			let reviewer = '';
-			let reviewee = '';
-			data.rows.forEach(e => {
-				if (displayName == e.corrector) {
-					reviewer +=
-						`${e.begin_at}` +
-						` - \`${e.correcteds}\`` +
-						`｜*${e.project}*` +
-						'\n';
-				} else {
-					reviewee +=
-						`*${e.begin_at}*` +
-						` - \`${e.corrector}\`` +
-						`｜*${e.project}*` +
-						'\n';
-				}
-			});
-			if (!reviewer) {
-				reviewer = 'レビュー履歴はまだありません';
-			}
-			if (!reviewee) {
-				reviewee = 'レビュー履歴はまだありません';
-			}
+			const { reviewer, reviewee } = createFieldValues(data, displayName);
 			const field = [
 				{
 					name: user.username,
@@ -74,3 +42,44 @@ module.exports = {
 		}
 	},
 };
+
+function createFieldValues(data, displayName) {
+	let reviewer = '';
+	let reviewee = '';
+	data.rows.forEach(e => {
+		if (displayName == e.corrector) {
+			reviewer +=
+				`${e.begin_at}` +
+				` - \`${e.correcteds}\`` +
+				`｜*${e.project}*` +
+				'\n';
+		} else {
+			reviewee +=
+				`*${e.begin_at}*` +
+				` - \`${e.corrector}\`` +
+				`｜*${e.project}*` +
+				'\n';
+		}
+	});
+	if (!reviewer) {
+		reviewer = 'レビュー履歴はまだありません';
+	}
+	if (!reviewee) {
+		reviewee = 'レビュー履歴はまだありません';
+	}
+	return { reviewer, reviewee };
+}
+
+function getDateFromDB(pgClient, displayName) {
+	const limit = 20;
+	const query =
+		`SELECT project, r.id, corrector, array_agg(corrected) as correcteds, to_char(begin_at, 'YYYY/MM/DD HH24:MI') as begin_at` +
+		' FROM reviews r' +
+		' RIGHT JOIN correcteds on r.id = review_id' +
+		' WHERE corrector = $1::text or corrected = $1::text' +
+		' GROUP BY r.id' +
+		' ORDER BY begin_at DESC' +
+		` LIMIT ${limit}`;
+
+	return pgClient.query(query, [displayName]);
+}
