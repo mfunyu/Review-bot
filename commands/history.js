@@ -10,23 +10,36 @@ module.exports = {
 				name: 'user',
 				description: 'ユーザー名',
 				type: 'USER',
-				required: true,
+				required: false,
 			},
 		],
 	},
 	async execute(interaction, Discord, pgClient) {
 		if (interaction.commandName == 'history') {
-			const user = interaction.options.getUser('user');
 			const guild = interaction.member.guild;
-			const displayName = guild.members.resolve(user.id).displayName;
+			const user = interaction.options.getUser('user');
+			const authorName = interaction.member.displayName;
 
-			const data = await getDateFromDB(pgClient, displayName);
+			let data;
+			let targetName;
+			if (user) {
+				const userName = guild.members.resolve(user.id).displayName;
+				targetName = userName;
+				data = await getRelatedDataFromDB(
+					pgClient,
+					authorName,
+					userName
+				);
+			} else {
+				targetName = authorName;
+				data = await getDataFromDB(pgClient, authorName);
+			}
 			console.dir(data.rows, { maxArrayLength: null });
 
-			const { reviewer, reviewee } = createFieldValues(data, displayName);
+			const { reviewer, reviewee } = createFieldValues(data, authorName);
 			const field = [
 				{
-					name: user.username,
+					name: `user: ${targetName}`,
 					value: `\`${data.rows.length}\`件のレビューを表示しています`,
 				},
 				{
@@ -70,7 +83,7 @@ function createFieldValues(data, displayName) {
 	return { reviewer, reviewee };
 }
 
-function getDateFromDB(pgClient, displayName) {
+function getDataFromDB(pgClient, displayName) {
 	const limit = 20;
 	const query =
 		`SELECT project, r.id, corrector, array_agg(corrected) as correcteds, to_char(begin_at, 'YYYY/MM/DD HH24:MI') as begin_at` +
@@ -82,4 +95,18 @@ function getDateFromDB(pgClient, displayName) {
 		` LIMIT ${limit}`;
 
 	return pgClient.query(query, [displayName]);
+}
+
+function getRelatedDataFromDB(pgClient, authorName, userName) {
+	const limit = 20;
+	const query =
+		`SELECT project, r.id, corrector, array_agg(corrected) as correcteds, to_char(begin_at, 'YYYY/MM/DD HH24:MI') as begin_at` +
+		' FROM reviews r' +
+		' RIGHT JOIN correcteds on r.id = review_id' +
+		' WHERE (corrector = $1::text and corrected = $2::text) or (corrector = $2::text and corrected = $1::text)' +
+		' GROUP BY r.id' +
+		' ORDER BY begin_at DESC' +
+		` LIMIT ${limit}`;
+
+	return pgClient.query(query, [authorName, userName]);
 }
