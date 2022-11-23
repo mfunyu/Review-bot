@@ -3,12 +3,17 @@ const { Client, Intents } = require('discord.js');
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const onclick = require('./onclick.js');
+const data = require('./data.js');
+const { Client: PGClient } = require('pg');
 
 dotenv.config();
 
 const client = new Client({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES],
 });
+
+const pgClient = new PGClient();
+data.manage(pgClient);
 
 const commands = {};
 const commandFiles = fs
@@ -38,9 +43,9 @@ client.on('interactionCreate', async interaction => {
 	}
 	const command = commands[interaction.commandName];
 	try {
-		await command.execute(interaction, Discord);
+		await command.execute(interaction, Discord, pgClient);
 	} catch (error) {
-		console.error(error);
+		console.error(`Error Command Excution: ${error}`);
 		await interaction.reply({
 			content: 'There was an error while executing this command!',
 			ephemeral: true,
@@ -49,3 +54,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
+
+process.on('unhandledRejection', (reason, promise) => {
+	console.error('Error UnhandledRejection:', reason, promise);
+});

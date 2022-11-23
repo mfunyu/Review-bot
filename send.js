@@ -24,6 +24,7 @@ exports.msgs = {
 	Deleted: { type: Type.info, emoji: ':wastebasket:', title: 'Deteled' },
 	Notify: { type: Type.info, emoji: ':mega:', title: 'Notification' },
 	Help: { type: Type.help, emoji: ':mega:', title: 'Help' },
+	History: { type: Type.help, emoji: ':clock2:', title: 'Review History' },
 };
 
 function createChooseMessageContent(vc_lists) {
