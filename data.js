@@ -1,13 +1,11 @@
 const db = require('./db.js');
 const api = require('./api.js');
-const { Client } = require('pg');
 const schedule = require('node-schedule');
 
 async function storeDataFromAPI(client, token, fetchFrom) {
 	let length = 100;
 	let i = 0;
 	while (length == 100) {
-		try {
 			const data = await api
 				.getRawData(token, fetchFrom, ++i)
 				.then(rawdata => {
@@ -16,15 +14,12 @@ async function storeDataFromAPI(client, token, fetchFrom) {
 					}
 					return api.parseData(rawdata);
 				});
+
 			length = data.length;
 			db.execInsert(data, client).catch(err => {
 				client.end();
 				throw new Error(`Postgresql Error: ${err.message}`);
 			});
-		} catch (err) {
-			console.error(err.message);
-			break;
-		}
 	}
 	console.log(`Log: DB setup done`);
 }
@@ -50,9 +45,7 @@ async function initDB(client, token) {
 		});
 }
 
-exports.manage = async function () {
-	const client = new Client();
-
+exports.manage = async function (client) {
 	const token = await api
 		.getAccessToken()
 		.then(json => {

@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const onclick = require('./onclick.js');
 const data = require('./data.js');
+const { Client: PGClient } = require('pg');
 
 dotenv.config();
 
@@ -11,7 +12,8 @@ const client = new Client({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES],
 });
 
-data.manage();
+const pgClient = new PGClient();
+data.manage(pgClient);
 
 const commands = {};
 const commandFiles = fs
