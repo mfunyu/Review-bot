@@ -1,4 +1,4 @@
-[English (en)](.github/README.md) | [日本語 (ja)](.github/README_ja.md)
+[English (en)](README.md) | [日本語 (ja)](README_ja.md)
 
 <h1 align="center"> Review-bot </h1>
 
