@@ -45,7 +45,7 @@ client.on('interactionCreate', async interaction => {
 	try {
 		await command.execute(interaction, Discord, pgClient);
 	} catch (error) {
-		console.error(error);
+		console.error(`Error Command Excution: ${error}`);
 		await interaction.reply({
 			content: 'There was an error while executing this command!',
 			ephemeral: true,
@@ -56,5 +56,5 @@ client.on('interactionCreate', async interaction => {
 client.login(process.env.DISCORD_TOKEN);
 
 process.on('unhandledRejection', (reason, promise) => {
-	console.log(reason, promise);
+	console.error('Error UnhandledRejection:', reason, promise);
 });

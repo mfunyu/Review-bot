@@ -18,7 +18,7 @@ async function storeDataFromAPI(client, token, fetchFrom) {
 		length = data.length;
 		db.execInsert(data, client).catch(err => {
 			client.end();
-			throw new Error(`Postgresql Error: ${err.message}`);
+			throw new Error(`Error Postgresql: ${err.message}`);
 		});
 	}
 	console.log(`Log: DB setup done`);
@@ -27,7 +27,7 @@ async function storeDataFromAPI(client, token, fetchFrom) {
 async function initDB(client, token) {
 	return client
 		.connect()
-		.then(() => console.log('Postgresql connected'))
+		.then(() => console.log('Log: Postgresql connected'))
 		.then(() => db.createTables(client))
 		.then(() => db.getDateToFetch(client))
 		.then(result => {
@@ -35,12 +35,12 @@ async function initDB(client, token) {
 			if (result.rows.length) {
 				fetchFrom = result.rows[0].begin_at;
 			}
-			console.log(`Fetch from ${fetchFrom.toISOString()}`);
+			console.log(`Log: Fetch from ${fetchFrom.toISOString()}`);
 			return fetchFrom;
 		})
 		.then(fetchFrom => storeDataFromAPI(client, token, fetchFrom))
 		.catch(err => {
-			console.error(`Postgresql Error: ${err.message}`);
+			console.error(`Error Postgresql: ${err.message}`);
 			client.end();
 		});
 }
@@ -55,7 +55,7 @@ exports.manage = async function (client) {
 			return json.access_token;
 		})
 		.catch(err => {
-			console.error(`Fetch Error: ${err.message}`);
+			console.error(`Error Fetch: ${err.message}`);
 			process.exit(1);
 		});
 
@@ -68,10 +68,12 @@ exports.manage = async function (client) {
 				if (result.rows.length) {
 					fetchFrom = result.rows[0].begin_at;
 				}
-				console.log(`Scheduled: Fetch from ${fetchFrom.toISOString()}`);
+				console.log(
+					`Log Scheduled: Fetch from ${fetchFrom.toISOString()}`
+				);
 				return fetchFrom;
 			})
 			.then(fetchFrom => storeDataFromAPI(client, token, fetchFrom))
-			.catch(err => console.log(err));
+			.catch(err => console.log(`Error Scheduled Fetch: ${err}`));
 	});
 };
