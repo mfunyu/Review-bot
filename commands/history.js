@@ -34,7 +34,6 @@ module.exports = {
 				targetName = authorName;
 				data = await getDataFromDB(pgClient, authorName);
 			}
-			console.dir(data.rows, { maxArrayLength: null });
 
 			const { reviewer, reviewee } = createFieldValues(data, authorName);
 			const field = [
