@@ -1,4 +1,7 @@
+[English (en)](.github/README.md) | [日本語 (ja)](.github/README_ja.md)
+
 <h1 align="center"> Review-bot </h1>
+
 <p align="center">
 Review-bot は、42 における課題レビューのための bot です。<br>
 レビューチャンネル作成・削除の手間を軽減し、Discord 上でのスムーズなレビューを可能にします。</p>
