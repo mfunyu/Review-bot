@@ -61,7 +61,7 @@ exports.manage = async function (client) {
 
 	await initDB(client, token);
 
-	schedule.scheduleJob(prosess.env.INTERVAL, function () {
+	schedule.scheduleJob(process.env.INTERVAL, function () {
 		db.getDateToFetch(client)
 			.then(result => {
 				let fetchFrom = new Date(Date.now());
