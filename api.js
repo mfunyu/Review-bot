@@ -16,19 +16,23 @@ exports.getAccessToken = function () {
 	return fetch(request).then(response => response.json());
 };
 
-exports.getRawData = function (token, idx) {
+exports.getRawData = function (token, fetchFrom, idx) {
 	const headers = {
 		Authorization: `Bearer ${token}`,
 	};
 	const campus_id = 26;
 	const page_size = 100;
+
+	const future = '2042-12-31T23:59:59.999Z';
 	const options =
 		'?' +
 		`filter[campus_id]=${campus_id}` +
 		'&' +
 		`filter[cursus_id]=${process.env.CURSUS_ID}` +
 		'&' +
-		'sort=-begin_at' +
+		`range[begin_at]=${fetchFrom.toISOString()},${future}` +
+		'&' +
+		'sort=begin_at' +
 		'&' +
 		`page[size]=${page_size}` +
 		'&' +

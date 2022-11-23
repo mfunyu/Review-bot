@@ -15,42 +15,49 @@ const client = new Client({
 });
 
 const pgClient = new PGClient();
+let fetchFrom = new Date('2020-06-22T02:00:00.000Z');
+pgClient
+	.connect()
+	.then(() => console.log('Postgresql connected'))
+	.then(() => db.createTables(pgClient))
+	.then(() => db.getDateToFetch(pgClient))
+	.then(result => {
+		if (result.rows.length) {
+			fetchFrom = result.rows[0].begin_at;
+		}
+		console.log(`Fetch from ${fetchFrom.toISOString()}`);
+	})
+	.then(() => api.getAccessToken())
+	.then(res => storeDataFromAPI(res.access_token))
+	.catch(err => {
+		console.error(`Postgresql Error: ${err.message}`);
+		pgClient.end();
+	});
 
-pgClient.connect();
-
-pgClient.query(
-	'CREATE TABLE IF NOT EXISTS reviews ( \
-		id INTEGER PRIMARY KEY, \
-		corrector VARCHAR ( 25 ) NOT NULL, \
-		project VARCHAR ( 50 ) NOT NULL, \
-		begin_at TIMESTAMP WITH TIME ZONE NOT NULL \
-		)'
-);
-
-pgClient.query(
-	'CREATE TABLE IF NOT EXISTS correcteds ( \
-		id VARCHAR ( 25 ) PRIMARY KEY, \
-		review_id INTEGER REFERENCES reviews (id) NOT NULL, \
-		corrected VARCHAR ( 25 ) NOT NULL \
-		)'
-);
-
-async function getAllData(token) {
-	let i = 1;
-	while (true) {
-		const rawdata = await api.getRawData(token, i);
-		const data = api.parseData(rawdata);
-		if (rawdata.length != 100) {
+async function storeDataFromAPI(token) {
+	let length = 100;
+	let i = 0;
+	while (length == 100) {
+		try {
+			const data = await api
+				.getRawData(token, fetchFrom, ++i)
+				.then(rawdata => {
+					if (rawdata.error) {
+						throw new Error(`${rawdata.error}: ${rawdata.message}`);
+					}
+					return api.parseData(rawdata);
+				});
+			length = data.length;
+			db.execInsert(data, pgClient).catch(err => {
+				pgClient.end();
+				throw new Error(`Postgresql Error: ${err.message}`);
+			});
+		} catch (err) {
+			console.error(err.message);
 			break;
 		}
-		db.execInsert(data, pgClient);
-		i++;
 	}
 }
-
-api.getAccessToken()
-	.then(res => getAllData(res.access_token))
-	.catch(error => console.log(error));
 
 // schedule.scheduleJob(prosess.env.INTERVAL, function () {
 // 	fetch(api.getAccessTokenRequest())
