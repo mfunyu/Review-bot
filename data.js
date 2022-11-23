@@ -6,20 +6,20 @@ async function storeDataFromAPI(client, token, fetchFrom) {
 	let length = 100;
 	let i = 0;
 	while (length == 100) {
-			const data = await api
-				.getRawData(token, fetchFrom, ++i)
-				.then(rawdata => {
-					if (rawdata.error) {
-						throw new Error(`${rawdata.error}: ${rawdata.message}`);
-					}
-					return api.parseData(rawdata);
-				});
-
-			length = data.length;
-			db.execInsert(data, client).catch(err => {
-				client.end();
-				throw new Error(`Postgresql Error: ${err.message}`);
+		const data = await api
+			.getRawData(token, fetchFrom, ++i)
+			.then(rawdata => {
+				if (rawdata.error) {
+					throw new Error(`${rawdata.error}: ${rawdata.message}`);
+				}
+				return api.parseData(rawdata);
 			});
+
+		length = data.length;
+		db.execInsert(data, client).catch(err => {
+			client.end();
+			throw new Error(`Postgresql Error: ${err.message}`);
+		});
 	}
 	console.log(`Log: DB setup done`);
 }
@@ -61,11 +61,17 @@ exports.manage = async function (client) {
 
 	await initDB(client, token);
 
-	// schedule.scheduleJob(prosess.env.INTERVAL, function () {
-	// 	fetch(api.getAccessTokenRequest())
-	// 		.then(response => response.json())
-	// 		.then(getReviewHistory())
-	// 		.then(query => pgClient.query(query))
-	// 		.catch(error => console.log(error));
-	// });
+	schedule.scheduleJob(prosess.env.INTERVAL, function () {
+		db.getDateToFetch(client)
+			.then(result => {
+				let fetchFrom = new Date(Date.now());
+				if (result.rows.length) {
+					fetchFrom = result.rows[0].begin_at;
+				}
+				console.log(`Scheduled: Fetch from ${fetchFrom.toISOString()}`);
+				return fetchFrom;
+			})
+			.then(fetchFrom => storeDataFromAPI(client, token, fetchFrom))
+			.catch(err => console.log(err));
+	});
 };
