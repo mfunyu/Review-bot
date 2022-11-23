@@ -31,7 +31,7 @@ exports.execInsert = function (data, client) {
 	data.forEach(e => {
 		query += `('${e.id}', '${e.corrector}', '${e.project}', '${e.time}'), `;
 	});
-	query = query.slice(0, -2);
+	query = query.slice(0, -2) + ' ON CONFLICT DO NOTHING';
 
 	let query2 = 'INSERT INTO correcteds (id, review_id, corrected) VALUES ';
 
@@ -40,11 +40,7 @@ exports.execInsert = function (data, client) {
 			query2 += `('${e.id}-${corrected.id}', '${e.id}', '${corrected.login}'), `;
 		});
 	});
-	query2 = query2.slice(0, -2);
+	query2 = query2.slice(0, -2) + ' ON CONFLICT DO NOTHING';
 
-	return Promise.all([client.query(query), client.query(query2)]).catch(
-		error => {
-			console.log(query, query2, error);
-		}
-	);
+	return Promise.all([client.query(query), client.query(query2)]);
 };
