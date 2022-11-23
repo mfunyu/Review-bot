@@ -1,0 +1,8 @@
+*
+!commands/
+!Procfile
+!*.txt
+!*.js
+!.gitignore
+!.prettierrc.js
+!package.json
