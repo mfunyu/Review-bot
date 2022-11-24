@@ -1,4 +1,4 @@
-[English (en)](README.md) • [日本語 (ja)](README_ja.md) • [Instllation Guide](<(README_doc.md)>)
+[English (en)](README.md) • [日本語 (ja)](README_ja.md) • [Instllation Guide](INSTALL.md)
 
 <h1 align="center"> Review-bot </h1>
 <p align="center">
