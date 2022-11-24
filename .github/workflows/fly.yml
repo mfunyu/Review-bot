@@ -9,9 +9,10 @@ env:
 
 jobs:
   deploy:
-      name: Deploy app
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: flyctl deploy
+    timeout-minutes: 10
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --detach
