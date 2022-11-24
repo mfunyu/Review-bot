@@ -10,21 +10,18 @@ exports.respond = async function (interaction) {
 	);
 	const channels = category.children;
 
-	const deleteChannel = channels.find(
-		channel => channel.name === interaction.customId
-	);
+	const indexOfSep = interaction.customId.indexOf('-');
+	const deleteChId = interaction.customId.slice(0, indexOfSep);
+	const deleteChName = interaction.customId.slice(indexOfSep + 1);
+	const deleteChannel = channels.find(channel => channel.id === deleteChId);
 	if (!deleteChannel) {
 		await send.followUp(
 			interaction,
 			send.msgs['DeteleAgain'],
-			interaction.customId
+			deleteChName
 		);
 		return;
 	}
-	await deleteChannel.delete();
-	await send.followUp(
-		interaction,
-		send.msgs['Deleted'],
-		interaction.customId
-	);
+	const deletedCh = await deleteChannel.delete();
+	await send.followUp(interaction, send.msgs['Deleted'], deletedCh.name);
 };

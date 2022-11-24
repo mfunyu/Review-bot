@@ -51,7 +51,7 @@ function createChooseMessageContent(vc_lists) {
 	let msg = '';
 	let index = 0;
 
-	vc_lists.forEach(channel_name => {
+	vc_lists.forEach(({ name }) => {
 		if (index % 5 == 0) {
 			msg += '\n';
 		}
@@ -59,7 +59,7 @@ function createChooseMessageContent(vc_lists) {
 		if (index > VC_LIMIT) {
 			return;
 		}
-		msg += `:${dict[index]}:  ${wrapCodeBlock(channel_name)}\n`;
+		msg += `:${dict[index]}:  ${wrapCodeBlock(name)}\n`;
 	});
 
 	if (index > VC_LIMIT) {

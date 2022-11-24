@@ -75,7 +75,7 @@ async function doneChoose(Discord, interaction, channels) {
 
 	channels.forEach(currentChannel => {
 		if (currentChannel.name.includes('/' + userName + '/')) {
-			vc_lists.push(currentChannel.name);
+			vc_lists.push({ name: currentChannel.name, id: currentChannel.id });
 		}
 	});
 	if (!vc_lists.length) {
@@ -88,7 +88,9 @@ async function doneChoose(Discord, interaction, channels) {
 	return;
 }
 
-function channelNameCompareFunc(name1, name2) {
+function channelNameCompareFunc(channel1, channel2) {
+	const name1 = channel1.name;
+	const name2 = channel2.name;
 	if (!name1.endsWith('~') || !name2.endsWith('~')) {
 		return name2.at(-1).charCodeAt(0) - name1.at(-1).charCodeAt(0);
 	}
@@ -104,7 +106,7 @@ function createButtonRow(Discord, vc_lists) {
 
 	let row_index = -1;
 	let index = 0;
-	vc_lists.forEach(channel_name => {
+	vc_lists.forEach(({ name, id }) => {
 		if (index >= VC_LIMIT) {
 			return;
 		}
@@ -114,7 +116,7 @@ function createButtonRow(Discord, vc_lists) {
 		}
 		row[row_index].addComponents(
 			new Discord.MessageButton()
-				.setCustomId(channel_name)
+				.setCustomId(`${id}-${name}`)
 				.setLabel((index + 1).toString(16).toUpperCase())
 				.setStyle('PRIMARY')
 		);
