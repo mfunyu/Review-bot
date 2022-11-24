@@ -23,6 +23,14 @@ module.exports = {
 			let data;
 			let targetName;
 			if (user) {
+				if (user.bot || user.id == interaction.member.user.id) {
+					await send.reply(
+						interaction,
+						send.msgs['Invalid'],
+						`user: ${user.username}`
+					);
+					return;
+				}
 				const userName = guild.members.resolve(user.id).displayName;
 				targetName = userName;
 				data = await getRelatedDataFromDB(

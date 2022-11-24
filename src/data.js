@@ -28,6 +28,7 @@ async function initDB(client, token) {
 	return client
 		.connect()
 		.then(() => console.log('Log: Postgresql connected'))
+		.then(() => db.setTimezone(client))
 		.then(() => db.createTables(client))
 		.then(() => db.getDateToFetch(client))
 		.then(result => {

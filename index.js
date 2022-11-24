@@ -2,8 +2,8 @@ const fs = require('fs');
 const { Client, Intents } = require('discord.js');
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
-const onclick = require('./onclick.js');
-const data = require('./data.js');
+const onclick = require('./src/onclick.js');
+const data = require('./src/data.js');
 const { Client: PGClient } = require('pg');
 
 dotenv.config();
@@ -17,11 +17,11 @@ data.manage(pgClient);
 
 const commands = {};
 const commandFiles = fs
-	.readdirSync('./commands')
+	.readdirSync('./src/commands')
 	.filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
+	const command = require(`./src/commands/${file}`);
 	commands[command.data.name] = command;
 }
 

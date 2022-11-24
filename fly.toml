@@ -1,0 +1,44 @@
+# fly.toml file generated for 42review-bot on 2022-11-23T18:05:33+09:00
+
+app = "42review-bot"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+  PORT = "8080"
+  VOICE_CATEGORY = "📝 Project Review"
+  INTERVAL = "0 0 * * *"
+  CURSUS_ID = "21,28,50"
+  PGUSER = "postgres"
+  PGHOST = "42review-bot-db.internal"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"

@@ -1,8 +1,14 @@
 *
-!commands/
-!Procfile
+!*/*
+!src/
 !*.txt
 !*.js
+!*.md
+!*.yml
+!*.json
+!*.toml
+!Dockerfile
 !.gitignore
 !.prettierrc.js
-!package.json
+!.env.sample
+!.github/
