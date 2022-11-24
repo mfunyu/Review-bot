@@ -58,7 +58,7 @@ Thus, you can use any text channel you like to enter commands of the Review-bot.
 | None     |          | Display your recent review histories        |
 | `[user]` |          | Display your review histories with the user |
 
-> :warning: nickname of each users in the server must be set to 42 login name.
+> :warning: Each member on the server should set 42 login names as their server nickname
 
 <hr/>
 
