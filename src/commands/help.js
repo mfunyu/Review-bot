@@ -48,6 +48,20 @@ module.exports = {
 					inline: true,
 				},
 				{
+					name: '️:clock2: **/history**',
+					value: '> レビュー履歴を表示する',
+				},
+				{
+					name: '引数なし',
+					value: '自分の直近のレビュー履歴を表示する',
+					inline: true,
+				},
+				{
+					name: '`[user]` (optional)',
+					value: '指定のユーザーとのレビュー履歴を表示する',
+					inline: true,
+				},
+				{
 					name: '️:mega: **/help**',
 					value: '> Review-botの使い方を表示する',
 				},
