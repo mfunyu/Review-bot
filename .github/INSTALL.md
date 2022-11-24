@@ -101,7 +101,7 @@ Review-bot uses [fly.io](https://fly.io/)'s free plan.
 
 -   Set environments
 
-    -   In `flyio.toml` file, set the credential to `PGHOST`
+    -   In `fly.toml` file, set the credential to `PGHOST`
 
     ```toml
     [env]
