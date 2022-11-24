@@ -58,6 +58,8 @@ Thus, you can use any text channel you like to enter commands of the Review-bot.
 | None     |          | Display your recent review histories        |
 | `[user]` |          | Display your review histories with the user |
 
+> :warning: nickname of each users in the server must be set to 42 login name.
+
 <hr/>
 
 ### ️:mega: `/help` : Display usage of the Review-bot

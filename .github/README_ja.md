@@ -59,6 +59,8 @@ Review-bot の全てのインタラクションが ephemeral なレスポンス�
 | なし       |      | 自分の直近のレビュー履歴を表示する       |
 | `[user]`   |      | 指定のユーザーとのレビュー履歴を表示する |
 
+> :warning: サーバーの nickname が 42 の login 名に設定されている必要があります。
+
 <hr/>
 
 ### ️:mega: `/help` : Review-bot の使い方を表示する
