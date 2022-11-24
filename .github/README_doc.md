@@ -1,7 +1,5 @@
 # Installation Guide
 
-## Install
-
 -   Clone this repo
 
     ```shell
@@ -9,7 +7,10 @@
     cd Review-bot
     ```
 
-## Requirements
+### Requirements
+
+-   Discord-bot and it's token
+-   42 Application and it's UID and SECRET
 
 ### Secrets
 
@@ -20,9 +21,15 @@
 | CLIENT_SECRET                  |         | [42 Application's SECRET](https://profile.intra.42.fr/oauth/applications) ※42 students only |
 | PGPASSWORD & POSTGRES_PASSWORD | ✔︎      | Create your own for local environment / Set password from fly.io                            |
 
-## `fly.io` Deployment
+## Deploy to `fly.io`
 
 Review-bot uses [fly.io](https://fly.io/)'s free plan.
+
+### Requirement
+
+-   [fly.io](https://fly.io/app/sign-up) Acccount
+
+### Procedure
 
 -   Clone this repo
 
@@ -109,13 +116,13 @@ Review-bot uses [fly.io](https://fly.io/)'s free plan.
     flyctl deploy
     ```
 
-## Local Environment
+## Run on local environment
 
-### Requirements
+### Requirement
 
 -   [Docker](https://www.docker.com/)
 
-### Procedures
+### Procedure
 
 -   Setup environments
 
@@ -145,4 +152,10 @@ Review-bot uses [fly.io](https://fly.io/)'s free plan.
 
 ### Environments
 
-There are several environment variables used.
+There are several environment variables used. These are all required.
+
+| Environments   | Details                                       | Format                                                                          |
+| -------------- | --------------------------------------------- | ------------------------------------------------------------------------------- |
+| VOICE_CATEGORY | Channel category's name in the discord server |                                                                                 |
+| CURSUS_ID      | 42 cursus ids to fetch                        | comma separated list: `NB,NB,NB` ex) `21,28,50`                                 |
+| INTERVAL       | Interval to fetch 42API for review histories  | In [cron format](https://www.ibm.com/docs/en/db2oc?topic=task-unix-cron-format) |
