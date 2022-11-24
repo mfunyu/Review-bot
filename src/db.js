@@ -24,6 +24,11 @@ exports.getDateToFetch = function (client) {
 	return client.query(query);
 };
 
+exports.setTimezone = function (client) {
+	let query = `SET SESSION timezone TO 'Asia/Tokyo'`;
+	return client.query(query);
+};
+
 exports.execInsert = function (data, client) {
 	let query =
 		'INSERT INTO reviews (id, corrector, project, begin_at) VALUES ';
