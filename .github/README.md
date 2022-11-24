@@ -1,9 +1,9 @@
-[English (en)](README.md) | [日本語 (ja)](README_ja.md)
+[English (en)](README.md) • [日本語 (ja)](README_ja.md) • [Instllation Guide](<(README_doc.md)>)
 
 <h1 align="center"> Review-bot </h1>
 <p align="center">
 Review-bot is a discord bot made for Review at 42 Tokyo. <br>
-It reduces the annoyance of creating and deleting review channels, allowing you to perform smooth reviews on Discord. </p>
+It reduces the annoyance of creating and deleting review channels,<br>allowing you to perform smooth reviews on Discord. </p>
 
 ## About
 
