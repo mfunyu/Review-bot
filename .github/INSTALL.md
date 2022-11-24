@@ -123,6 +123,8 @@ Review-bot uses [fly.io](https://fly.io/)'s free plan.
 ### Requirement
 
 -   [Docker](https://www.docker.com/)
+-   [npm](https://www.npmjs.com/package/npm)
+-   [node.js](https://nodejs.org/en/download/)
 
 ### Procedure
 
@@ -142,6 +144,12 @@ Review-bot uses [fly.io](https://fly.io/)'s free plan.
 
     ```shell
     docker-compose up --build -d
+    ```
+
+-   Install node modules
+
+    ```shell
+    npm ci
     ```
 
 -   Start the app
