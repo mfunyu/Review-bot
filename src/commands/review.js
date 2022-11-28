@@ -85,7 +85,8 @@ function calcDeley(time) {
 
 function notifyUser(guild, channel, reviewer, time) {
 	if (!guild.channels.cache.get(channel.id)) return;
-	if (reviewer.voice && reviewer.voice.channel.name == channel.name) return;
+	if (reviewer.voice.channel && reviewer.voice.channel.name == channel.name)
+		return;
 	send.send(channel, send.msgs['Notify'], reviewer, time);
 }
 
