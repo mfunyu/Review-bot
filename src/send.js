@@ -117,29 +117,32 @@ function set_embed(msg, params) {
 
 exports.reply = async function (interaction, msg, params, row) {
 	content = set_embed(msg, params);
+	const ephemeral = interaction.channel.name != process.env.REVIEW_CHANNEL;
 
 	if (row) {
 		await interaction.reply({
 			embeds: [content],
-			ephemeral: true,
+			ephemeral,
 			components: row,
 		});
 	} else {
 		await interaction.reply({
 			embeds: [content],
-			ephemeral: true,
+			ephemeral,
 		});
 	}
 };
 
 exports.followUp = async function (interaction, msg, params) {
 	content = set_embed(msg, wrapCodeBlock(params));
+	const ephemeral = interaction.channel.name == process.env.REVIEW_CHANNEL;
 
-	await interaction.followUp({ embeds: [content], ephemeral: true });
+	await interaction.followUp({ embeds: [content], ephemeral });
 };
 
 exports.deferReply = async function (interaction) {
-	await interaction.deferReply({ ephemeral: true });
+	const ephemeral = interaction.channel.name == process.env.REVIEW_CHANNEL;
+	await interaction.deferReply({ ephemeral });
 };
 
 exports.send = function (channel, msg, user, param) {

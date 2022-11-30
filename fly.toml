@@ -8,6 +8,7 @@ processes = []
 [env]
   PORT = "8080"
   VOICE_CATEGORY = "📝 Project Review"
+  REVIEW_CHANNEL = "🤖review-bot"
   INTERVAL = "0 0 * * *"
   CURSUS_ID = "21,28,50"
   PGUSER = "postgres"
