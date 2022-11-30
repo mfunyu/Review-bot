@@ -135,13 +135,13 @@ exports.reply = async function (interaction, msg, params, row) {
 
 exports.followUp = async function (interaction, msg, params) {
 	content = set_embed(msg, wrapCodeBlock(params));
-	const ephemeral = interaction.channel.name == process.env.REVIEW_CHANNEL;
+	const ephemeral = interaction.channel.name != process.env.REVIEW_CHANNEL;
 
 	await interaction.followUp({ embeds: [content], ephemeral });
 };
 
 exports.deferReply = async function (interaction) {
-	const ephemeral = interaction.channel.name == process.env.REVIEW_CHANNEL;
+	const ephemeral = interaction.channel.name != process.env.REVIEW_CHANNEL;
 	await interaction.deferReply({ ephemeral });
 };
 
