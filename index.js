@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const onclick = require('./src/onclick.js');
 const data = require('./src/data.js');
+const send = require('./src/send.js');
 const { Client: PGClient } = require('pg');
 
 dotenv.config();
@@ -46,10 +47,14 @@ client.on('interactionCreate', async interaction => {
 		await command.execute(interaction, Discord, pgClient);
 	} catch (error) {
 		console.error(`Error Command Excution: ${error}`);
-		await interaction.reply({
-			content: 'There was an error while executing this command!',
-			ephemeral: true,
-		});
+		if (error.message == 'Client was closed and is not queryable') {
+			await send.reply(interaction, send.msgs['Error']);
+		} else {
+			await interaction.reply({
+				content: 'There was an error while executing this command!',
+				ephemeral: true,
+			});
+		}
 	}
 });
 

@@ -19,6 +19,7 @@ exports.msgs = {
 	NotInCategory: { type: Type.warning, emoji: ':mute:', title: 'Not In VC' },
 	DeteleAgain: { type: Type.warning, emoji: ':warning:', title: 'Not Found' },
 	Invalid: { type: Type.error, emoji: ':x:', title: 'Invalid Input' },
+	Error: { type: Type.error, emoji: ':x:', title: 'Internal Error' },
 	Created: { type: Type.info, emoji: ':loud_sound:', title: 'Created' },
 	Choose: { type: Type.info, emoji: ':notepad_spiral:', title: 'Choose' },
 	Deleted: { type: Type.info, emoji: ':wastebasket:', title: 'Deteled' },
@@ -95,6 +96,9 @@ function set_msg_content(msg, params) {
 	} else if (msg == exports.msgs['Invalid']) {
 		return `少なくとも以下のフィールドの入力が不正です\n\
 		${wrapCodeBlock(params)}`;
+	} else if (msg == exports.msgs['Error']) {
+		return `42API secretが失効した可能性があります。\n\
+		お手数をおかけして申し訳ありませんが、管理者に問い合わせお願い致します`;
 	} else if (msg == exports.msgs['Notify']) {
 		return `${wrapCodeBlock(params)}から、\
 		こちらのチャンネルでレビューが予定されています`;
