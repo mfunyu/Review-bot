@@ -57,7 +57,6 @@ exports.manage = async function (client) {
 		})
 		.catch(err => {
 			console.error(`Error Fetch: ${err.message}`);
-			process.exit(1);
 		});
 
 	await initDB(client, token);
