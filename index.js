@@ -14,7 +14,10 @@ const client = new Client({
 });
 
 const pgClient = new PGClient();
-data.manage(pgClient);
+data.manage(pgClient).catch(err => {
+	console.error(`Error Fetch: ${err.message}`);
+	send.dm_admin(client, err, send.msgs['DM']);
+});
 
 const commands = {};
 const commandFiles = fs

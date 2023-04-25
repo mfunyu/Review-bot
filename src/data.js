@@ -47,17 +47,12 @@ async function initDB(client, token) {
 }
 
 exports.manage = async function (client) {
-	const token = await api
-		.getAccessToken()
-		.then(json => {
-			if (json.error) {
-				throw new Error(`${json.error}: ${json.error_description}`);
-			}
-			return json.access_token;
-		})
-		.catch(err => {
-			console.error(`Error Fetch: ${err.message}`);
-		});
+	const token = await api.getAccessToken().then(json => {
+		if (json.error) {
+			throw new Error(`${json.error}: ${json.error_description}`);
+		}
+		return json.access_token;
+	});
 
 	await initDB(client, token);
 

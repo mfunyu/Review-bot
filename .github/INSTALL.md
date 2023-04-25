@@ -99,6 +99,12 @@ Review-bot uses [fly.io](https://fly.io/)'s free plan.
     flyctl secrets set PGPASSWORD=""
     ```
 
+    -   Also, add your discord user id to `ADMIN_USERID` if you wish to get notify by DM on 42API secret expiration
+
+    ```
+    flyctl secrets set ADMIN_USERID=""
+    ```
+
 -   Set environments
 
     -   In `fly.toml` file, set the credential to `PGHOST`

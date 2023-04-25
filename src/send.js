@@ -20,6 +20,7 @@ exports.msgs = {
 	DeteleAgain: { type: Type.warning, emoji: ':warning:', title: 'Not Found' },
 	Invalid: { type: Type.error, emoji: ':x:', title: 'Invalid Input' },
 	Error: { type: Type.error, emoji: ':x:', title: 'Internal Error' },
+	DM: { type: Type.error, emoji: ':x:', title: 'API Expired' },
 	Created: { type: Type.info, emoji: ':loud_sound:', title: 'Created' },
 	Choose: { type: Type.info, emoji: ':notepad_spiral:', title: 'Choose' },
 	Deleted: { type: Type.info, emoji: ':wastebasket:', title: 'Deteled' },
@@ -99,6 +100,9 @@ function set_msg_content(msg, params) {
 	} else if (msg == exports.msgs['Error']) {
 		return `42API secretが失効した可能性があります。\n\
 		お手数をおかけして申し訳ありませんが、管理者に問い合わせお願い致します`;
+	} else if (msg == exports.msgs['DM']) {
+		return `42API secretが失効した可能性があります。\n\
+		至急確認してください`;
 	} else if (msg == exports.msgs['Notify']) {
 		return `${wrapCodeBlock(params)}から、\
 		こちらのチャンネルでレビューが予定されています`;
@@ -153,4 +157,15 @@ exports.send = function (channel, msg, user, param) {
 	content = set_embed(msg, param);
 
 	channel.send({ content: `${user.toString()} さん`, embeds: [content] });
+};
+
+exports.dm_admin = function (client, err, msg) {
+	content = set_embed(msg);
+
+	if (process.env.ADMIN_USERID) {
+		client.users.send(process.env.ADMIN_USERID, {
+			content: `Error: ${err.message}`,
+			embeds: [content],
+		});
+	}
 };
