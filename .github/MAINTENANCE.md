@@ -2,7 +2,9 @@
 
 # Maintenance Guide
 
-## Updating 42 API Secret
+Periodic update of 42 API is required.
+
+### Updating 42 API Secret
 
 -   Access https://profile.intra.42.fr/oauth/applications/14827
 
@@ -13,8 +15,9 @@
     flyctl secrets set CLIENT_SECRET=""
     ```
 
-### For UID
+### Changing UID
 
+-   Run
     ```
     flyctl secrets set CLIENT_UID=""
     ```
