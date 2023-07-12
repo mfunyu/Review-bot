@@ -4,7 +4,7 @@
 
 ## Updating 42 API Secret
 
--   Access https://profile.intra.42.fr/oauth/applications/7443
+-   Access https://profile.intra.42.fr/oauth/applications/14827
 
 -   Copy SECRET
 
