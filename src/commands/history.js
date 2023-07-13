@@ -40,6 +40,10 @@ module.exports = {
 					userName
 				);
 			} else {
+				if (!pgClient._connected) {
+					await send.reply(interaction, send.msgs['Error']);
+				}
+
 				targetName = authorName;
 				data = await getDataFromDB(pgClient, authorName);
 			}

@@ -160,12 +160,11 @@ exports.send = function (channel, msg, user, param) {
 };
 
 exports.dm_admin = function (client, err, msg) {
-	content = set_embed(msg);
+	if (!process.env.ADMIN_USERID) return;
 
-	if (process.env.ADMIN_USERID) {
-		client.users.send(process.env.ADMIN_USERID, {
-			content: `Error: ${err.message}`,
-			embeds: [content],
-		});
-	}
+	content = set_embed(msg);
+	client.users.send(process.env.ADMIN_USERID, {
+		content: `Error: ${err.message}`,
+		embeds: [content],
+	});
 };
