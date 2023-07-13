@@ -29,7 +29,7 @@ module.exports = {
 			},
 		],
 	},
-	async execute(interaction, Discord) {
+	async execute(interaction) {
 		if (interaction.commandName == 'done') {
 			const guild = interaction.member.guild;
 
@@ -59,7 +59,7 @@ module.exports = {
 					}
 					break;
 				case 'choose':
-					doneChoose(Discord, interaction, channels);
+					doneChoose(interaction, channels);
 					return;
 			}
 			await send.deferReply(interaction);
@@ -75,7 +75,7 @@ module.exports = {
 	},
 };
 
-async function doneChoose(Discord, interaction, channels) {
+async function doneChoose(interaction, channels) {
 	const userName = interaction.member.displayName;
 	let vc_lists = [];
 
@@ -89,7 +89,7 @@ async function doneChoose(Discord, interaction, channels) {
 		return;
 	}
 	vc_lists.sort(channelNameCompareFunc);
-	const row = createButtonRow(Discord, vc_lists);
+	const row = createButtonRow(vc_lists);
 	await send.reply(interaction, send.msgs['Choose'], vc_lists, row);
 	return;
 }
@@ -105,7 +105,7 @@ function channelNameCompareFunc(channel1, channel2) {
 	return parseInt(time1, 10) - parseInt(time2, 10);
 }
 
-function createButtonRow(Discord, vc_lists) {
+function createButtonRow(vc_lists) {
 	const VC_LIMIT = 15;
 	const MAX_ROW_MEMBERS = 5;
 	const row = [];

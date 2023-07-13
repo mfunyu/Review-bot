@@ -15,7 +15,7 @@ module.exports = {
 			},
 		],
 	},
-	async execute(interaction, Discord, pgClient) {
+	async execute(interaction, pgClient) {
 		if (interaction.commandName == 'history') {
 			const guild = interaction.member.guild;
 			const user = interaction.options.getUser('user');

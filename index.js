@@ -1,6 +1,5 @@
 const fs = require('fs');
 const { Client, GatewayIntentBits } = require('discord.js');
-const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const onclick = require('./src/onclick.js');
 const data = require('./src/data.js');
@@ -47,7 +46,7 @@ client.on('interactionCreate', async interaction => {
 	}
 	const command = commands[interaction.commandName];
 	try {
-		await command.execute(interaction, Discord, pgClient);
+		await command.execute(interaction, pgClient);
 	} catch (error) {
 		console.error(`Error Command Excution: ${error}`);
 		if (error.message == 'Client was closed and is not queryable') {
