@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType } = require('discord.js');
+const { ApplicationCommandOptionType, ChannelType } = require('discord.js');
 const send = require('../send.js');
 
 module.exports = {
@@ -61,8 +61,10 @@ module.exports = {
 			const category = guild.channels.cache.find(
 				channel => channel.name === process.env.VOICE_CATEGORY
 			);
-			const channel = await category.createChannel(channelName, {
-				type: 'GUILD_VOICE',
+			const categoryChannelChildManager = category.children;
+			const channel = await categoryChannelChildManager.create({
+				name: channelName,
+				type: ChannelType.GuildVoice,
 			});
 			setTimeout(() => {
 				notifyUser(guild, channel, reviewer, time);

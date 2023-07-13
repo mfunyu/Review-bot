@@ -32,7 +32,7 @@ module.exports = {
 			const category = guild.channels.cache.find(
 				channel => channel.name === process.env.VOICE_CATEGORY
 			);
-			const channels = category.children;
+			const channels = category.children.cache;
 			const deleteChannels = [];
 
 			let ret;
