@@ -8,7 +8,7 @@ exports.respond = async function (interaction) {
 	const category = guild.channels.cache.find(
 		channel => channel.name === process.env.VOICE_CATEGORY
 	);
-	const channels = category.children;
+	const channels = category.children.cache;
 
 	const indexOfSep = interaction.customId.indexOf('-');
 	const deleteChId = interaction.customId.slice(0, indexOfSep);

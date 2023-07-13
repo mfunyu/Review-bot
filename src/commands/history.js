@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require('discord.js');
 const embed = require('../embed.js');
 const send = require('../send.js');
 
@@ -9,12 +10,12 @@ module.exports = {
 			{
 				name: 'user',
 				description: 'ユーザー名',
-				type: 'USER',
+				type: ApplicationCommandOptionType.User,
 				required: false,
 			},
 		],
 	},
-	async execute(interaction, Discord, pgClient) {
+	async execute(interaction, pgClient) {
 		if (interaction.commandName == 'history') {
 			const guild = interaction.member.guild;
 			const user = interaction.options.getUser('user');

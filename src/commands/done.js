@@ -1,3 +1,9 @@
+const {
+	ApplicationCommandOptionType,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+} = require('discord.js');
 const embed = require('../embed.js');
 const send = require('../send.js');
 
@@ -9,21 +15,21 @@ module.exports = {
 			{
 				name: 'choose',
 				description: 'チャンネルを選択して削除する',
-				type: 'SUB_COMMAND',
+				type: ApplicationCommandOptionType.Subcommand,
 			},
 			{
 				name: 'all',
 				description: '自分のチャンネルを全て削除する',
-				type: 'SUB_COMMAND',
+				type: ApplicationCommandOptionType.Subcommand,
 			},
 			{
 				name: 'current',
 				description: '現在入室中のチャンネルを削除する',
-				type: 'SUB_COMMAND',
+				type: ApplicationCommandOptionType.Subcommand,
 			},
 		],
 	},
-	async execute(interaction, Discord) {
+	async execute(interaction) {
 		if (interaction.commandName == 'done') {
 			const guild = interaction.member.guild;
 
@@ -31,7 +37,7 @@ module.exports = {
 			const category = guild.channels.cache.find(
 				channel => channel.name === process.env.VOICE_CATEGORY
 			);
-			const channels = category.children;
+			const channels = category.children.cache;
 			const deleteChannels = [];
 
 			let ret;
@@ -53,7 +59,7 @@ module.exports = {
 					}
 					break;
 				case 'choose':
-					doneChoose(Discord, interaction, channels);
+					doneChoose(interaction, channels);
 					return;
 			}
 			await send.deferReply(interaction);
@@ -69,7 +75,7 @@ module.exports = {
 	},
 };
 
-async function doneChoose(Discord, interaction, channels) {
+async function doneChoose(interaction, channels) {
 	const userName = interaction.member.displayName;
 	let vc_lists = [];
 
@@ -83,7 +89,7 @@ async function doneChoose(Discord, interaction, channels) {
 		return;
 	}
 	vc_lists.sort(channelNameCompareFunc);
-	const row = createButtonRow(Discord, vc_lists);
+	const row = createButtonRow(vc_lists);
 	await send.reply(interaction, send.msgs['Choose'], vc_lists, row);
 	return;
 }
@@ -99,7 +105,7 @@ function channelNameCompareFunc(channel1, channel2) {
 	return parseInt(time1, 10) - parseInt(time2, 10);
 }
 
-function createButtonRow(Discord, vc_lists) {
+function createButtonRow(vc_lists) {
 	const VC_LIMIT = 15;
 	const MAX_ROW_MEMBERS = 5;
 	const row = [];
@@ -111,14 +117,14 @@ function createButtonRow(Discord, vc_lists) {
 			return;
 		}
 		if (index % MAX_ROW_MEMBERS == 0) {
-			row.push(new Discord.MessageActionRow());
+			row.push(new ActionRowBuilder());
 			row_index++;
 		}
 		row[row_index].addComponents(
-			new Discord.MessageButton()
+			new ButtonBuilder()
 				.setCustomId(`${id}-${name}`)
 				.setLabel((index + 1).toString(16).toUpperCase())
-				.setStyle('PRIMARY')
+				.setStyle(ButtonStyle.Primary)
 		);
 		index++;
 	});
