@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require('discord.js');
 const embed = require('../embed.js');
 const send = require('../send.js');
 
@@ -9,17 +10,17 @@ module.exports = {
 			{
 				name: 'choose',
 				description: 'チャンネルを選択して削除する',
-				type: 'SUB_COMMAND',
+				type: ApplicationCommandOptionType.Subcommand,
 			},
 			{
 				name: 'all',
 				description: '自分のチャンネルを全て削除する',
-				type: 'SUB_COMMAND',
+				type: ApplicationCommandOptionType.Subcommand,
 			},
 			{
 				name: 'current',
 				description: '現在入室中のチャンネルを削除する',
-				type: 'SUB_COMMAND',
+				type: ApplicationCommandOptionType.Subcommand,
 			},
 		],
 	},
@@ -115,7 +116,7 @@ function createButtonRow(Discord, vc_lists) {
 			row_index++;
 		}
 		row[row_index].addComponents(
-			new Discord.MessageButton()
+			new Discord.ButtonBuilder()
 				.setCustomId(`${id}-${name}`)
 				.setLabel((index + 1).toString(16).toUpperCase())
 				.setStyle('PRIMARY')

@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require('discord.js');
 const send = require('../send.js');
 
 module.exports = {
@@ -8,19 +9,19 @@ module.exports = {
 			{
 				name: 'project',
 				description: 'レビューするプロジェクト名',
-				type: 'STRING',
+				type: ApplicationCommandOptionType.String,
 				required: true,
 			},
 			{
 				name: 'time',
 				description: 'レビュー開始時間（hhmm）',
-				type: 'INTEGER',
+				type: ApplicationCommandOptionType.Integer,
 				required: true,
 			},
 			{
 				name: 'reviewer',
 				description: 'レビュワーを指定する',
-				type: 'USER',
+				type: ApplicationCommandOptionType.User,
 				required: false,
 			},
 		],
