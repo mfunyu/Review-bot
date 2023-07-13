@@ -1,4 +1,9 @@
-const { ApplicationCommandOptionType } = require('discord.js');
+const {
+	ApplicationCommandOptionType,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+} = require('discord.js');
 const embed = require('../embed.js');
 const send = require('../send.js');
 
@@ -112,14 +117,14 @@ function createButtonRow(Discord, vc_lists) {
 			return;
 		}
 		if (index % MAX_ROW_MEMBERS == 0) {
-			row.push(new Discord.MessageActionRow());
+			row.push(new ActionRowBuilder());
 			row_index++;
 		}
 		row[row_index].addComponents(
-			new Discord.ButtonBuilder()
+			new ButtonBuilder()
 				.setCustomId(`${id}-${name}`)
 				.setLabel((index + 1).toString(16).toUpperCase())
-				.setStyle('PRIMARY')
+				.setStyle(ButtonStyle.Primary)
 		);
 		index++;
 	});
