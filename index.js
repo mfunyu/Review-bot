@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Client, Intents } = require('discord.js');
+const { Client, GatewayIntentBits } = require('discord.js');
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const onclick = require('./src/onclick.js');
@@ -10,7 +10,7 @@ const { Client: PGClient } = require('pg');
 dotenv.config();
 
 const client = new Client({
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES],
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
 });
 
 const pgClient = new PGClient();
